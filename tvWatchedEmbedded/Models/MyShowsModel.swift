@@ -38,7 +38,7 @@ class MyShowsModel {
         saveMy()
     }
 }
-        
+        // sample code for tvmaze
 //        var episodes: [MyEpisode] = []
 //         let epid = show.embedded?.episodes?[0].id ?? 0
 //        let newepisode1 = MyEpisode(id: epid, dateWatched: "2024-10-10")
