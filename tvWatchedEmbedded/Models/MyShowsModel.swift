@@ -7,15 +7,21 @@
 
 import SwiftUI
 import Observation
+import Combine
 
-@Observable
-class MyShowsModel {
-    var MyShows: [MyShow] = []
+
+class MyShowsModel: ObservableObject {
+
+    @Published var MyShows: [MyShow] = []
     
+    internal init(MyShows: [MyShow] = []) {
+        fetchMyShows()
+    }
+
     func fetchMyShows() {
 
         if let loadedShows = DataStore.shared.loadShows([MyShow].self) {
-                MyShows = loadedShows
+            MyShows = loadedShows.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
             } else {
                 MyShows = []
                 print("Failed to load shows")
@@ -37,6 +43,17 @@ class MyShowsModel {
         MyShows.remove(atOffsets: offsets)
         saveMy()
     }
+    func showOnFile(myshowid: Int) -> Bool {
+        MyShows.contains(where: { $0.id == myshowid })
+    }
+    func showepisodeOnFile(myshowid: Int, episodeid: Int) -> Bool {
+        guard let show = MyShows.first(where: { $0.id == myshowid }),
+              let episodes = show.episodes else {
+            return false
+        }
+        return episodes.contains(where: { $0.id == episodeid })
+    }
+
 }
         // sample code for tvmaze getting github going
 //        var episodes: [MyEpisode] = []

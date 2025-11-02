@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ShowSearchView: View {
     @State private var searchText: String = ""
-    @State  var myshowsmodel: MyShowsModel
+    @EnvironmentObject var myshowsmodel: MyShowsModel
     var completion: (String?) -> Void
     @State var show: ShowBase = ShowBase()
     @State private var error: String?
@@ -46,10 +46,13 @@ struct ShowSearchView: View {
                         Button("Use") {
                             // Simulate search logic; return searchText if found, or nil if not found
                             let found = searchText.isEmpty ? nil : searchText
+                            if !myshowsmodel.showOnFile(myshowid: show.id ?? 1) {
+                                
                             let episodes: [MyEpisode] = []
                             let newshow = MyShow(id: show.id ?? 1, name: show.name ?? "wrong", episodes: episodes)
                             myshowsmodel.addShow(newshow)
                             myshowsmodel.saveMy()
+                            }
                             completion(found)
                         }
                         .padding()
@@ -67,7 +70,7 @@ struct ShowSearchView: View {
 }
 
 #Preview {
-    ShowSearchView(myshowsmodel: MyShowsModel()) { foundName in
+    ShowSearchView() { foundName in
         // For preview, just print or ignore the returned string
         print("Found name: \(String(describing: foundName))")
     }

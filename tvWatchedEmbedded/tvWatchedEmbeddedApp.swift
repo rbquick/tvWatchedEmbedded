@@ -9,10 +9,12 @@ import SwiftUI
 
 @main
 struct tvWatchedEmbeddedApp: App {
+    @StateObject var myshowsmodel: MyShowsModel = MyShowsModel()
     var body: some Scene {
         WindowGroup {
             ShowListView()
 //            ContentView()
         }
+        .environmentObject(myshowsmodel)
     }
 }

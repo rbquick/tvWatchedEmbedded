@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ShowListView: View {
-    @State var myshows = MyShowsModel()
+    @EnvironmentObject var myshowsmodel: MyShowsModel
     @State var  myshowname: [String] = [
         "A Man on the Inside",
         "Black Doves",
@@ -21,12 +21,12 @@ struct ShowListView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(myshows.MyShows) { myshow in
+                ForEach(myshowsmodel.MyShows) { myshow in
                     NavigationLink(destination: ShowDetailView(myshow: myshow)) {
                         Text(myshow.name)
                     }
                 }
-                .onDelete(perform: myshows.delete)
+                .onDelete(perform: myshowsmodel.delete)
             }
             .navigationTitle("Shows")
             .toolbar {
@@ -34,16 +34,16 @@ struct ShowListView: View {
                     showingSearch = true
                 }
             }
-            .onAppear {
-                 myshows.fetchMyShows()
-            }
+//            .onAppear {
+//                myshowsmodel.fetchMyShows()
+//            }
             .sheet(isPresented: $showingSearch) {
-                ShowSearchView(myshowsmodel: myshows) { foundName in
+                ShowSearchView() { foundName in
                     showingSearch = false
-                    if let foundName = foundName, !myshowname.contains(foundName) {
-                        myshowname.append(foundName)
-                        myshownameSorted = myshowname.sorted()
-                    }
+//                    if let foundName = foundName, !myshowname.contains(foundName) {
+//                        myshowname.append(foundName)
+//                        myshownameSorted = myshowname.sorted()
+//                    }
                 }
             }
         }
