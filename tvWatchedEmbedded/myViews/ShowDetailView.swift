@@ -61,13 +61,13 @@ struct ShowDetailView: View {
         }
         .onAppear {
             Task {
-                await loadShows(query: myshow.name)
+                await loadShows(query: myshow.id)
             }
         }
         .padding()
     }
-    func loadShows(query: String) async {
-        guard let url = URL(string: "https://api.tvmaze.com/singlesearch/shows?q=\(query)&embed=episodes") else {
+    func loadShows(query: Int) async {
+        guard let url = URL(string: "https://api.tvmaze.com/shows/\(query)?embed=episodes") else {
             error = "Invalid URL"
             return
         }
