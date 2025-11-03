@@ -10,15 +10,19 @@ import Foundation
 struct MyShow: Codable, Equatable, Hashable, Identifiable {
     let id: Int
     let name: String
-    let episodes: [MyEpisode]?
+    let Kodi: Bool
+    let Apollo: Bool
+    var episodes: [MyEpisode]
     
     enum CodingKeys: String, CodingKey {
-        case id, name, episodes
+        case id, name, Kodi, Apollo, episodes
     }
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         self.name = try container.decode(String.self, forKey: .name)
+        self.Kodi = try container.decode(Bool.self, forKey: .Kodi)
+        self.Apollo = try container.decode(Bool.self, forKey: .Apollo)
         self.episodes = try container.decode([MyEpisode].self, forKey: .episodes)
     }
     // Encoding method to conform to Encodable
@@ -26,11 +30,15 @@ struct MyShow: Codable, Equatable, Hashable, Identifiable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
+        try container.encode(Kodi, forKey: .Kodi)
+        try container.encode(Apollo, forKey: .Apollo)
         try container.encodeIfPresent(episodes, forKey: .episodes)
     }
-    init(id: Int = 1, name: String = "New", episodes: [MyEpisode]? = nil) {
+    init(id: Int = 1, name: String = "New", Kodi: Bool = false, Apollo: Bool = false, episodes: [MyEpisode] = []) {
         self.id = id
         self.name = name
+        self.Kodi = Kodi
+        self.Apollo = Apollo
         self.episodes = episodes
     }
     static func == (lhs: MyShow, rhs: MyShow) -> Bool {

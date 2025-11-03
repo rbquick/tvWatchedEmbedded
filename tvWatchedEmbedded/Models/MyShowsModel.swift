@@ -47,11 +47,58 @@ class MyShowsModel: ObservableObject {
         MyShows.contains(where: { $0.id == myshowid })
     }
     func showepisodeOnFile(myshowid: Int, episodeid: Int) -> Bool {
-        guard let show = MyShows.first(where: { $0.id == myshowid }),
-              let episodes = show.episodes else {
+        guard let show = MyShows.first(where: { $0.id == myshowid })
+               else {
             return false
         }
+        let episodes = show.episodes
         return episodes.contains(where: { $0.id == episodeid })
+    }
+    func showepisodeDatewatched(myshowid: Int, episodeid: Int) -> String {
+        guard let show = MyShows.first(where: { $0.id == myshowid })
+               else {
+            return ""
+        }
+        guard let episode = show.episodes.first(where: { $0.id == episodeid }) else { return ""}
+        return episode.dateWatched
+    }
+    func changeEpisode(myshowid: Int, episodeid: Int, datewatched: String) -> String {
+        guard let showIndex = MyShows.firstIndex(where: { $0.id == myshowid }) else {
+            return ""
+        }
+        guard let episodeIndex = MyShows[showIndex].episodes.firstIndex(where: { $0.id == episodeid }) else {
+            // there is no episode, so add it
+            addepisode(myshowid: myshowid, episode: episodeid, datewatched: "2025-10-10")
+            saveMy()
+            return "2025-10-10"
+        }
+        // we have the episode, so delete it from episodes array
+        var episodes = MyShows[showIndex].episodes
+        episodes.remove(at: episodeIndex)
+
+        let show = MyShows[showIndex]
+        let updatedShow = MyShow(id: show.id,
+                                name: show.name,
+                                Kodi: show.Kodi,
+                                Apollo: show.Apollo,
+                                episodes: episodes)
+        MyShows[showIndex] = updatedShow
+        saveMy()
+        return ""
+    }
+    func addepisode(myshowid: Int, episode: Int, datewatched: String) {
+        guard let index = MyShows.firstIndex(where: { $0.id == myshowid }) else { return }
+        let newEpisode = MyEpisode(id: episode, dateWatched: datewatched)
+        MyShows[index].episodes.append(newEpisode)
+    }
+    func updatedevice(myshowid: Int, apollo: Bool, kodi: Bool) {
+        guard let show = MyShows.first(where: { $0.id == myshowid })
+                       else {
+                    return
+                }
+        let newshow = MyShow(id: show.id, name: show.name, Kodi: kodi, Apollo: apollo, episodes: show.episodes)
+        
+        update(show: newshow)
     }
 
 }

@@ -9,7 +9,7 @@ import Foundation
 
 struct MyEpisode: Codable, Equatable, Hashable, Identifiable {
     let id: Int
-    let dateWatched: String?
+    var dateWatched: String
     
     enum CodingKeys: String, CodingKey {
         case id, dateWatched
@@ -17,7 +17,7 @@ struct MyEpisode: Codable, Equatable, Hashable, Identifiable {
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
-        self.dateWatched = try container.decodeIfPresent(String.self, forKey: .dateWatched)
+        self.dateWatched = try container.decode(String.self, forKey: .dateWatched)
     }
     // Encoding method to satisfy Encodable
     func encode(to encoder: Encoder) throws {
@@ -25,7 +25,7 @@ struct MyEpisode: Codable, Equatable, Hashable, Identifiable {
         try container.encode(id, forKey: .id)
         try container.encodeIfPresent(dateWatched, forKey: .dateWatched)
     }
-    init (id: Int = 0, dateWatched: String? = nil) {
+    init (id: Int = 0, dateWatched: String = "") {
         self.id = id
         self.dateWatched = dateWatched
     }

@@ -9,9 +9,21 @@ import SwiftUI
 
 struct ShowDetailView: View {
     let myshow: MyShow
+    @State private var apollo: Bool
+    @State private var kodi: Bool
     @State var show: ShowBase = ShowBase()
+    @EnvironmentObject var myshowsmodel: MyShowsModel
+    
     
     @State private var error: String?
+    
+    init(myshow: MyShow) {
+         self.myshow = myshow
+         // Initialize the state from myshow property
+         _apollo = State(initialValue: myshow.Apollo)
+        _kodi = State(initialValue: myshow.Kodi)
+     }
+    
     var sortedEpisodes: [Episodes] {
         (show.embedded?.episodes ?? []).sorted {
             if let season0 = $0.season, let season1 = $1.season, season0 != season1 {
@@ -37,16 +49,39 @@ struct ShowDetailView: View {
                         ProgressView()
                     }
                 }
-                Text(myshow.name)
-                    .font(.largeTitle)
-                    .bold()
+                VStack {
+                    Text(myshow.name)
+                        .font(.largeTitle)
+                        .bold()
+                
+                HStack() {
+                    Toggle(isOn: $apollo) {
+                        Text(apollo ? "On Appollo" : "NOT on Appollo" )
+                            .onChange(of: apollo) { oldValue, newValue in
+                                myshowsmodel.updatedevice(myshowid: myshow.id, apollo: newValue, kodi: kodi)
+                                print("apollo: \(apollo) kodi: \(kodi)")
+                            }
+                    }
+                    .toggleStyle(.automatic)
+                    
+                    Toggle(isOn: $kodi) {
+                        Text(kodi ? "On Kodi" : "NOT on Kodi")
+                            .onChange(of: kodi) { oldValue, newValue in
+                                myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: newValue)
+                                print("apollo: \(apollo) Kodi: \(kodi)")
+                            }
+                    }
+                    .toggleStyle(.automatic)
+                }
+                }
             }
             
-            
+
             if let episodes = show.embedded?.episodes, !episodes.isEmpty {
                 List(sortedEpisodes, id: \.id) { episode in
                     VStack(alignment: .leading) {
-                        EpisodeDetailView(myshowid: myshow.id, episode: episode)                    }
+                        EpisodeDetailView(myshowid: myshow.id, episode: episode)
+                    }
                     .padding(.vertical, 4)
                 }
             } else {
@@ -64,6 +99,9 @@ struct ShowDetailView: View {
                 await loadShows(query: myshow.id)
             }
         }
+        .onDisappear {
+            myshowsmodel.saveMy()
+        }
         .padding()
     }
     func loadShows(query: Int) async {
@@ -75,18 +113,6 @@ struct ShowDetailView: View {
             let (data, _) = try await URLSession.shared.data(from: url)
             let results = try JSONDecoder().decode(ShowBase.self, from: data)
             show = results
-            
-            //            var episodes: [MyEpisode] = []
-            //             let epid = show.embedded?.episodes?[0].id ?? 0
-            //            let newepisode1 = MyEpisode(id: epid, dateWatched: "2024-10-10")
-            //            episodes.append(newepisode1)
-            //            var myshowsxx: [MyShow] = []
-            //            let showxx = MyShow(id: show.id ?? 0, name: show.name ?? "No Name", episodes: episodes)
-            //            myshowsxx.append(showxx)
-            //
-            //            DataStore.shared.saveShows(myshowsxx)
-            //            print(showxx)
-            //            let a = 1
         } catch {
             self.error = error.localizedDescription
         }
@@ -95,4 +121,5 @@ struct ShowDetailView: View {
 
 #Preview {
     ShowDetailView(myshow: MyShow())
+        .environmentObject(MyShowsModel())
 }

@@ -34,16 +34,10 @@ struct ShowListView: View {
                     showingSearch = true
                 }
             }
-//            .onAppear {
-//                myshowsmodel.fetchMyShows()
-//            }
             .sheet(isPresented: $showingSearch) {
                 ShowSearchView() { foundName in
                     showingSearch = false
-//                    if let foundName = foundName, !myshowname.contains(foundName) {
-//                        myshowname.append(foundName)
-//                        myshownameSorted = myshowname.sorted()
-//                    }
+                    // don't have to do anything here sing the ShowSearchView adds the show if found and used
                 }
             }
         }
@@ -52,4 +46,5 @@ struct ShowListView: View {
 
 #Preview {
     ShowListView()
+        .environmentObject(MyShowsModel())
 }

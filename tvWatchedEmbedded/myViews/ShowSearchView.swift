@@ -29,7 +29,13 @@ struct ShowSearchView: View {
                         }
                     }
                     if show.name != nil {
-                        Text("Show found: \(show.name ?? "Not found")")
+                        VStack {
+                            Text("Show found: \(show.name ?? "Not found")")
+                            if myshowsmodel.showOnFile(myshowid: show.id ?? 1) {
+                                Text("Already added to list")
+                                    .foregroundColor(Color.red)
+                            }
+                        }
                     }
                 }
                 TextField("Enter show name", text: $searchText)
@@ -47,11 +53,10 @@ struct ShowSearchView: View {
                             // Simulate search logic; return searchText if found, or nil if not found
                             let found = searchText.isEmpty ? nil : searchText
                             if !myshowsmodel.showOnFile(myshowid: show.id ?? 1) {
-                                
-                            let episodes: [MyEpisode] = []
-                            let newshow = MyShow(id: show.id ?? 1, name: show.name ?? "wrong", episodes: episodes)
-                            myshowsmodel.addShow(newshow)
-                            myshowsmodel.saveMy()
+                                let episodes: [MyEpisode] = []
+                                let newshow = MyShow(id: show.id ?? 1, name: show.name ?? "wrong", episodes: episodes)
+                                myshowsmodel.addShow(newshow)
+                                myshowsmodel.saveMy()
                             }
                             completion(found)
                         }
@@ -74,7 +79,7 @@ struct ShowSearchView: View {
         // For preview, just print or ignore the returned string
         print("Found name: \(String(describing: foundName))")
     }
-    .frame(width: 300, height: 200) // Optional: size for visual clarity in preview
+//    .frame(width: 300, height: 200) // Optional: size for visual clarity in preview
 }
 extension (ShowSearchView) {
     func getShows(query: String) async  {
