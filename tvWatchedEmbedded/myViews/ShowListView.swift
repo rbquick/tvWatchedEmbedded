@@ -9,19 +9,23 @@ import SwiftUI
 
 struct ShowListView: View {
     @EnvironmentObject var myshowsmodel: MyShowsModel
-    @State var  myshowname: [String] = [
-        "A Man on the Inside",
-        "Black Doves",
-        "So Long!",
-        "The Librarians: The Next Chapter"
-    ]
-    @State var myshownameSorted: [String] = []
+
     @State private var showingSearch = false
+    
+    @State private var searchText: String = ""
+
+    var filteredShows: [MyShow] {
+        if searchText.isEmpty {
+            return myshowsmodel.MyShows
+        } else {
+            return myshowsmodel.MyShows.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        }
+    }
          
     var body: some View {
         NavigationView {
             List {
-                ForEach(myshowsmodel.MyShows) { myshow in
+                ForEach(filteredShows) { myshow in
                     NavigationLink(destination: ShowDetailView(myshow: myshow)) {
                         Text(myshow.name)
                     }
@@ -30,7 +34,7 @@ struct ShowListView: View {
             }
             .navigationTitle("Shows")
             .toolbar {
-                Button("Search") {
+                Button("New Shows") {
                     showingSearch = true
                 }
             }
@@ -40,6 +44,7 @@ struct ShowListView: View {
                     // don't have to do anything here sing the ShowSearchView adds the show if found and used
                 }
             }
+            .searchable(text: $searchText, prompt: "Filte shows") // Adds a native search bar
         }
     }
 }
