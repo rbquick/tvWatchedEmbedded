@@ -30,6 +30,7 @@ class MyShowsModel: ObservableObject {
     
     func addShow(_ show: MyShow) {
         MyShows.append(show)
+        MyShows.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
     func update(show: MyShow) {
         if let index = MyShows.firstIndex(of: show) {
@@ -68,9 +69,9 @@ class MyShowsModel: ObservableObject {
         }
         guard let episodeIndex = MyShows[showIndex].episodes.firstIndex(where: { $0.id == episodeid }) else {
             // there is no episode, so add it
-            addepisode(myshowid: myshowid, episode: episodeid, datewatched: "2025-10-10")
+            addepisode(myshowid: myshowid, episode: episodeid, datewatched: datewatched)
             saveMy()
-            return "2025-10-10"
+            return datewatched
         }
         // we have the episode, so delete it from episodes array
         var episodes = MyShows[showIndex].episodes

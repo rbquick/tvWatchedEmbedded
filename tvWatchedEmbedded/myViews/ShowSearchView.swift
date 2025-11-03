@@ -31,6 +31,7 @@ struct ShowSearchView: View {
                     if show.name != nil {
                         VStack {
                             Text("Show found: \(show.name ?? "Not found")")
+                            Text("Premiered: \(show.premiered ?? "Not found")")
                             if myshowsmodel.showOnFile(myshowid: show.id ?? 1) {
                                 Text("Already added to list")
                                     .foregroundColor(Color.red)
