@@ -63,15 +63,23 @@ struct EpisodeDetailView: View {
                 }
             }
             if showDatePicker {
-                 DatePicker("Select Watched Date", selection: $selectedDate, displayedComponents: .date)
-                     .datePickerStyle(.graphical) // you can use .compact or .wheel styles too
-                     .onChange(of: selectedDate) { oldValue, newValue in
-                         let newDateString = dateFormatter.string(from: newValue)
-                         _ = myshowsmodel.changeEpisode(myshowid: myshowid, episodeid: id, datewatched: newDateString)
-                         isOnFile = true
-                         showDatePicker.toggle()
-                     }
-             }
+                VStack {
+                    HStack {
+                        Button("Save Date  ") {
+                            let newDateString = dateFormatter.string(from: selectedDate)
+                            _ = myshowsmodel.changeEpisode(myshowid: myshowid, episodeid: id, datewatched: newDateString)
+                            isOnFile = true
+                            showDatePicker = false
+                        }
+                        Button("Cancel") {
+                            showDatePicker = false
+                        }
+                    }
+                    DatePicker("Select Watched Date", selection: $selectedDate, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                    
+                }
+            }
         }
     }
 }
