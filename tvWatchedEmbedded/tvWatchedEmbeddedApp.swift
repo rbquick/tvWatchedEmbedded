@@ -12,8 +12,16 @@ struct tvWatchedEmbeddedApp: App {
     @StateObject var myshowsmodel: MyShowsModel = MyShowsModel()
     var body: some Scene {
         WindowGroup {
-            ShowListView()
-//            ContentView()
+            TabView {
+                ShowListView()
+                    .tabItem {
+                        Label("Shows", systemImage: "list.bullet")
+                    }
+                MyCalendar()
+                    .tabItem {
+                        Label("Calendar", systemImage: "calendar")
+                    }
+            }
         }
         .environmentObject(myshowsmodel)
     }

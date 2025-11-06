@@ -7,30 +7,58 @@
 
 import SwiftUI
 
+enum ShowSourceFilter: String, CaseIterable, Identifiable {
+    case all = "All"
+    case apollo = "Apollo"
+    case kodi = "Kodi"
+    var id: String { self.rawValue }
+}
+
 struct ShowListView: View {
     @EnvironmentObject var myshowsmodel: MyShowsModel
 
     @State private var showingSearch = false
     
     @State private var searchText: String = ""
+    
+    @State private var selectedSource: ShowSourceFilter = .all
 
     var filteredShows: [MyShow] {
+        let sourceFiltered: [MyShow]
+        switch selectedSource {
+        case .all:
+            sourceFiltered = myshowsmodel.MyShows
+        case .apollo:
+            sourceFiltered = myshowsmodel.MyShows.filter { $0.Apollo }
+        case .kodi:
+            sourceFiltered = myshowsmodel.MyShows.filter { $0.Kodi }
+        }
         if searchText.isEmpty {
-            return myshowsmodel.MyShows
+            return sourceFiltered
         } else {
-            return myshowsmodel.MyShows.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            return sourceFiltered.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         }
     }
          
     var body: some View {
         NavigationView {
-            List {
-                ForEach(filteredShows) { myshow in
-                    NavigationLink(destination: ShowDetailView(myshow: myshow)) {
-                        Text(myshow.name)
+            VStack {
+                Picker("Source", selection: $selectedSource) {
+                    ForEach(ShowSourceFilter.allCases) { filter in
+                        Text(filter.rawValue).tag(filter)
                     }
                 }
-                .onDelete(perform: myshowsmodel.delete)
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                
+                List {
+                    ForEach(filteredShows) { myshow in
+                        NavigationLink(destination: ShowDetailView(myshow: myshow)) {
+                            Text(myshow.name)
+                        }
+                    }
+                    .onDelete(perform: myshowsmodel.delete)
+                }
             }
             .navigationTitle("Shows")
             .toolbar {

@@ -190,8 +190,8 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
             landmarkName = "updatedevice(myshowid:apollo:kodi:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,10 +206,88 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
             landmarkName = "updatedevice(myshowid:apollo:kodi:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "588001AE-A8FC-4608-8C83-D140903635F0"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/myViews/EpisodeDetailView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7EDD59E3-83D9-4F3E-A610-7A64D8E03D38"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/myViews/EpisodeDetailView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "48D7D703-E100-426B-B132-7105D1865BD1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/myViews/TvListings/ShowListView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "22"
+            endingLineNumber = "22"
+            landmarkName = "ShowListView"
+            landmarkType = "14">
+            <Locations>
+               <Location
+                  uuid = "48D7D703-E100-426B-B132-7105D1865BD1 - c0102ae72e7ab39b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "property wrapper backing initializer of tvWatchedEmbedded.ShowListView.searchText : Swift.String"
+                  moduleName = "tvWatchedEmbedded.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rbq/Documents/Swift/tvWatchedEmbedded/tvWatchedEmbedded/myViews/TvListings/ShowListView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "48D7D703-E100-426B-B132-7105D1865BD1 - 110dcd8dc28f27f0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "tvWatchedEmbedded.ShowListView.init(myshowsmodel: SwiftUI.EnvironmentObject&lt;tvWatchedEmbedded.MyShowsModel&gt;) -&gt; tvWatchedEmbedded.ShowListView"
+                  moduleName = "tvWatchedEmbedded.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rbq/Documents/Swift/tvWatchedEmbedded/tvWatchedEmbedded/myViews/TvListings/ShowListView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "22"
+                  endingLineNumber = "22">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

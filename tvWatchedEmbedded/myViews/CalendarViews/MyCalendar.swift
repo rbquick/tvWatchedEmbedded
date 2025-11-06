@@ -8,8 +8,35 @@
 import SwiftUI
 
 struct MyCalendar: View {
+    @State var showDatePicker = false
+    @State var selectedDate = Date()
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Button("click me") {
+                showDatePicker = true
+            }
+            if showDatePicker {
+                VStack {
+                    HStack {
+                        Button("Save Date  ") {
+                            showDatePicker = false
+                            print("Save Date")
+                        }
+                        Button("Today") {
+                            showDatePicker = false
+                            print("Today")
+                        }
+                        Button("Cancel") {
+                            showDatePicker = false
+                            print("Cancel")
+                        }
+                    }
+                    DatePicker("Select Watched Date", selection: $selectedDate, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                    
+                }
+            }
+        }
     }
 }
 

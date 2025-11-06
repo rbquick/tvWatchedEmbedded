@@ -79,9 +79,9 @@ struct ShowDetailView: View {
 
             if let episodes = show.embedded?.episodes, !episodes.isEmpty {
                 List(sortedEpisodes, id: \.id) { episode in
-                    VStack(alignment: .leading) {
+//                    VStack(alignment: .center) {
                         EpisodeDetailView(myshowid: myshow.id, episode: episode)
-                    }
+//                    }
                     .padding(.vertical, 4)
                 }
             } else {

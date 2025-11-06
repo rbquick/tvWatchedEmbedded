@@ -14,72 +14,63 @@ struct EpisodeDetailView: View {
     @State var isOnFile: Bool = false
     @State var isOnSummary: Bool = false
     
-     // State for selected date as Date type
-     @State private var selectedDate: Date = Date()
-     // For showing or hiding the picker
-     @State private var showDatePicker: Bool = false
-     
-     // Date formatter to convert between String and Date
-     private var dateFormatter: DateFormatter {
-         let df = DateFormatter()
-         df.dateFormat = "yyyy-MM-dd" // match your date string format
-         return df
-     }
+    // State for selected date as Date type
+    @State  var selectedDate: Date = Date()
+    // For showing or hiding the picker
+    @State  var showDatePicker: Bool = false
+    
+    // Date formatter to convert between String and Date
+    private var dateFormatter: DateFormatter {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd" // match your date string format
+        return df
+    }
     var body: some View {
-        Text(episode.name ?? "Unknown")
-            .font(.headline)
-        if let id = episode.id,
-            let season = episode.season,
-            let number = episode.number,
-            let aired = episode.airdate {
-
-            if let summary = episode.summary {
-                Button("Show Summary") {
-                    isOnSummary.toggle()
+        VStack {
+            Text(episode.name ?? "Unknown")
+                .font(.headline)
+            if let id = episode.id,
+               let season = episode.season,
+               let number = episode.number,
+               let aired = episode.airdate {
+                
+                if let summary = episode.summary {
+                    Button("Show Summary") {
+                        print("Button Show Summary")
+                        isOnSummary.toggle()
+                    }
+                    
+                    if isOnSummary {
+                        Text(summary)
+                    }
                 }
                 
-                if isOnSummary {
-                    Text(summary)
+                Text("Season \(season), Episode \(number), Aired \(aired)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                Button {
+                    print("Button Watch Episode")
+                    showDatePicker.toggle()
+                } label: {
+                    Text(isOnFile ? "Watched \(dateFormatter.string(from: selectedDate))" : "Not Watched")
                 }
-            }
-
-            Text("Season \(season), Episode \(number), Aired \(aired)")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-            Button {
-                showDatePicker.toggle()
-            } label: {
-                Text(isOnFile ? "Watched \(dateFormatter.string(from: selectedDate))" : "Not Watched")
-            }
-            .foregroundColor(
-                isOnFile ? .red : .blue
-            )
-            .buttonStyle(.plain) // Avoid default button styles for text-only button
-            .onAppear {
-                isOnFile = myshowsmodel.showepisodeOnFile(myshowid: myshowid, episodeid: id)
-                let dateString = myshowsmodel.showepisodeDatewatched(myshowid: myshowid, episodeid: id)
-                if let date = dateFormatter.date(from: dateString) {
-                    selectedDate = date
-                }
-            }
-            if showDatePicker {
-                VStack {
-                    HStack {
-                        Button("Save Date  ") {
-                            let newDateString = dateFormatter.string(from: selectedDate)
-                            _ = myshowsmodel.changeEpisode(myshowid: myshowid, episodeid: id, datewatched: newDateString)
-                            isOnFile = true
-                            showDatePicker = false
-                        }
-                        Button("Cancel") {
-                            showDatePicker = false
-                        }
+                .foregroundColor(
+                    isOnFile ? .red : .blue
+                )
+                .buttonStyle(.plain) // Avoid default button styles for text-only button
+                .onAppear {
+                    isOnFile = myshowsmodel.showepisodeOnFile(myshowid: myshowid, episodeid: id)
+                    let dateString = myshowsmodel.showepisodeDatewatched(myshowid: myshowid, episodeid: id)
+                    if let date = dateFormatter.date(from: dateString) {
+                        selectedDate = date
                     }
-                    DatePicker("Select Watched Date", selection: $selectedDate, displayedComponents: .date)
-                        .datePickerStyle(.graphical)
-                    
                 }
             }
+            
+        }
+        .alignmentGuide(VerticalAlignment.center) { _ in 0.5 }
+        .sheet(isPresented: $showDatePicker) {
+            myCalendar(myshowid: myshowid, episode: episode, isOnFile: $isOnFile, selectedDate: $selectedDate)
         }
     }
 }
@@ -88,4 +79,48 @@ struct EpisodeDetailView: View {
     let episode = Episodes(id: 1, name: "Test Episode", season: 1, number: 1, airdate: "2025-10-29")
     EpisodeDetailView(myshowid: 1, episode: episode)
         .environmentObject(MyShowsModel())
+}
+
+struct myCalendar: View {
+    let myshowid: Int
+    let episode: Episodes
+    @Binding var isOnFile: Bool
+    @Binding var selectedDate: Date
+    @EnvironmentObject var myshowsmodel: MyShowsModel
+    @Environment(\.dismiss) private var dismiss
+    // Date formatter to convert between String and Date
+    private var dateFormatter: DateFormatter {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd" // match your date string format
+        return df
+    }
+    var body: some View {
+        VStack {
+            HStack {
+                Button("Save Date  ") {
+                    print("Save Date............")
+                    let newDateString = dateFormatter.string(from: selectedDate)
+                    _ = myshowsmodel.changeEpisode(myshowid: myshowid, episodeid: episode.id ?? 0, datewatched: newDateString)
+                    isOnFile = true
+                    dismiss()
+                }
+                Button("Today") {
+                    print("Today..............")
+                    selectedDate = Date()
+                }
+                Button("UnWatched  ") {
+                                    print("UnWatched............")
+                                    myshowsmodel.deleteepisode(myshowid: myshowid, episodeid: episode.id ?? 0)
+                                    isOnFile = false
+                                    dismiss()
+                                }
+                Button("Cancel") {
+                    print("cancel.............")
+                    dismiss()
+                }
+            }
+            DatePicker("Select Watched Date", selection: $selectedDate, displayedComponents: .date)
+                .datePickerStyle(.graphical)
+        }
+    }
 }
