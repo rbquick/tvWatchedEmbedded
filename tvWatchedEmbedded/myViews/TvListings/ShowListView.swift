@@ -61,6 +61,7 @@ struct ShowListView: View {
                 }
             }
             .navigationTitle("Shows")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 Button("New Shows") {
                     showingSearch = true

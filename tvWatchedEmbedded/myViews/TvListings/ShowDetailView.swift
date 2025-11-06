@@ -11,6 +11,7 @@ struct ShowDetailView: View {
     let myshow: MyShow
     @State private var apollo: Bool
     @State private var kodi: Bool
+    @State private var scrollepisodeID: Int = 0
     @State var show: ShowBase = ShowBase()
     @EnvironmentObject var myshowsmodel: MyShowsModel
     
@@ -22,6 +23,9 @@ struct ShowDetailView: View {
          // Initialize the state from myshow property
          _apollo = State(initialValue: myshow.Apollo)
         _kodi = State(initialValue: myshow.Kodi)
+        if myshow.episodes.count > 0 {
+            _scrollepisodeID = State(initialValue: myshow.episodes[0].id)
+        }
      }
     
     var sortedEpisodes: [Episodes] {
@@ -36,7 +40,7 @@ struct ShowDetailView: View {
         }
     }
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack {
                 
                 if let image = show.image?.medium {
@@ -55,6 +59,7 @@ struct ShowDetailView: View {
                         .bold()
                 
                 HStack() {
+//                    Text("\(scrollepisodeID)")  // put this in for testing to show the episode.id
                     Toggle(isOn: $apollo) {
                         Text(apollo ? "On Appollo" : "NOT on Appollo" )
                             .onChange(of: apollo) { oldValue, newValue in
@@ -74,17 +79,26 @@ struct ShowDetailView: View {
                     .toggleStyle(.automatic)
                 }
                 }
+                .frame(maxHeight: .infinity, alignment: .top)
             }
-            
+            .frame(height: 200)
+            .padding(.horizontal)
+            .background(.yellow.opacity(1.0))
 
             if let episodes = show.embedded?.episodes, !episodes.isEmpty {
-                List(sortedEpisodes, id: \.id) { episode in
-                    HStack {
-                        Spacer()
-                        EpisodeDetailView(myshowid: myshow.id, episode: episode)
-                        Spacer()
+                ScrollViewReader { proxy in
+                    List(sortedEpisodes, id: \.id) { episode in
+                        HStack {
+                            Spacer()
+                            EpisodeDetailView(myshowid: myshow.id, episode: episode)
+                            Spacer()
+                        }
+                        .padding(.vertical, 4)
+                        .id(episode.id)
                     }
-                    .padding(.vertical, 4)
+                    .onAppear {
+                        proxy.scrollTo(scrollepisodeID, anchor: .bottom)
+                    }
                 }
             } else {
                 Text("No episodes available")
@@ -96,6 +110,7 @@ struct ShowDetailView: View {
                     .foregroundColor(.red)
             }
         }
+        .background(.red.opacity(1.0))
         .onAppear {
             Task {
                 await loadShows(query: myshow.id)

@@ -34,7 +34,7 @@ struct MyShow: Codable, Equatable, Hashable, Identifiable {
         try container.encode(Apollo, forKey: .Apollo)
         try container.encodeIfPresent(episodes, forKey: .episodes)
     }
-    init(id: Int = 1, name: String = "New", Kodi: Bool = false, Apollo: Bool = false, episodes: [MyEpisode] = []) {
+    init(id: Int = 74443, name: String = "New", Kodi: Bool = false, Apollo: Bool = false, episodes: [MyEpisode] = []) {
         self.id = id
         self.name = name
         self.Kodi = Kodi
