@@ -40,7 +40,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "82B4074F-12CE-4166-B924-F58ED8927A3F"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tvWatchedEmbedded/codegen_690244229b570/Episodes.swift"
@@ -50,22 +50,6 @@
             endingLineNumber = "72"
             landmarkName = "Episodes"
             landmarkType = "14">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "51DAF319-B808-4190-AE99-A677D6793882"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "32"
-            endingLineNumber = "32"
-            landmarkName = "addShow(_:)"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -245,48 +229,15 @@
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
-            uuid = "48D7D703-E100-426B-B132-7105D1865BD1"
+            uuid = "B4D8425F-BC06-41A3-B400-A7C2864317AB"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "tvWatchedEmbedded/myViews/TvListings/ShowListView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
-            landmarkName = "ShowListView"
-            landmarkType = "14">
+            symbolName = ""
+            moduleName = "">
             <Locations>
-               <Location
-                  uuid = "48D7D703-E100-426B-B132-7105D1865BD1 - c0102ae72e7ab39b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "property wrapper backing initializer of tvWatchedEmbedded.ShowListView.searchText : Swift.String"
-                  moduleName = "tvWatchedEmbedded.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/rbq/Documents/Swift/tvWatchedEmbedded/tvWatchedEmbedded/myViews/TvListings/ShowListView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0">
-               </Location>
-               <Location
-                  uuid = "48D7D703-E100-426B-B132-7105D1865BD1 - 110dcd8dc28f27f0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "tvWatchedEmbedded.ShowListView.init(myshowsmodel: SwiftUI.EnvironmentObject&lt;tvWatchedEmbedded.MyShowsModel&gt;) -&gt; tvWatchedEmbedded.ShowListView"
-                  moduleName = "tvWatchedEmbedded.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/rbq/Documents/Swift/tvWatchedEmbedded/tvWatchedEmbedded/myViews/TvListings/ShowListView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "22"
-                  endingLineNumber = "22">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>

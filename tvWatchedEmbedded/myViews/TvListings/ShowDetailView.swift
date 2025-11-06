@@ -79,9 +79,11 @@ struct ShowDetailView: View {
 
             if let episodes = show.embedded?.episodes, !episodes.isEmpty {
                 List(sortedEpisodes, id: \.id) { episode in
-//                    VStack(alignment: .center) {
+                    HStack {
+                        Spacer()
                         EpisodeDetailView(myshowid: myshow.id, episode: episode)
-//                    }
+                        Spacer()
+                    }
                     .padding(.vertical, 4)
                 }
             } else {
