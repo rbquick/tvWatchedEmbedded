@@ -7,17 +7,42 @@
 
 import SwiftUI
 
-struct MyCalendar: View {
+struct MyCalendarView: View {
     @EnvironmentObject var myshowsmodel: MyShowsModel
     
     // Holds all base shows loaded asynchronously
+    @State private var show: ShowBase = ShowBase()
     @State private var allBaseShows: [ShowBase] = []
     
     // Holds any error messages during loading (not yet used)
     @State private var error: String?
     
     var body: some View {
+        
         VStack {
+            Text("My Calendar \(myshowsmodel.MyShows.count)")
+            Text("allBaseShows: \(allBaseShows.count)")
+            List(showsWithUpcomingEpisodes, id: \.id) { myShow in
+                VStack(alignment: .leading) {
+                    Text(myShow.name)
+                    ForEach(myShow.episodes.filter { !$0.dateWatched.isEmpty }, id: \.id) { watchedEpisode in                        // Show info about the watched episode
+                        Text("Watched: S\(watchedEpisode.season ?? 0)E\(watchedEpisode.number ?? 0) ")
+                            .font(.subheadline)
+                        // Find next upcoming episode(s) in base show after this watched episode
+                        if let baseShow = allBaseShows.first(where: { $0.id == myShow.id }) {
+                            let upcoming = upcomingEpisodes(after: watchedEpisode, in: baseShow)
+                            if !upcoming.isEmpty {
+                                ForEach(upcoming, id: \.id) { ep in
+                                    Text("Upcoming: S\(ep.season)E\(ep.episode) - \(ep.title) (Airdate: \(ep.airdate))")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+            }
             // Display list of shows with upcoming episodes after watched ones
 //            List(showsWithUpcomingEpisodes, id: \.id) { myShow in
 //                VStack(alignment: .leading) {
@@ -49,8 +74,10 @@ struct MyCalendar: View {
 //            }
         }
         // Load all base shows when view appears
-        .task {
-            await loadAllShows()
+        .onAppear {
+            Task {
+                await loadAllShows()
+            }
         }
     }
     
@@ -80,22 +107,17 @@ struct MyCalendar: View {
         // Replace this with real API or data fetching logic as needed
         
         // Simulate delay
-        try? await Task.sleep(nanoseconds: 500_000_000)
+//        try? await Task.sleep(nanoseconds: 500_000_000)
+        allBaseShows.removeAll()
+        var i = 0
+        repeat {
+            if !myshowsmodel.MyShows[i].episodes.isEmpty  {
+                
+                await loadShows(query: myshowsmodel.MyShows[i].id)
+            }
+                i += 1
+            } while i < myshowsmodel.MyShows.count
         
-        // Placeholder: empty array or dummy show bases
-        // Here we create dummy data to avoid preview errors
-        let dummyepisodes: [Episodes] = [
-            Episodes(id: 1, name: "Pilot", season: 1, number: 1, airdate: "2025-01-01"),
-            Episodes(id: 2, name: "Second Episode", season: 1, number: 2, airdate: "2025-01-08")
-        ]
-        let dummyembedded = _embedded(episodes: dummyepisodes)
-        let dummyShowBase = ShowBase(
-            id: 1,
-            name: "Dummy Show",
-            embedded: dummyembedded
-        )
-        // Assign dummy data for now
-        self.allBaseShows = [dummyShowBase]
     }
     func loadShows(query: Int) async {
         guard let url = URL(string: "https://api.tvmaze.com/shows/\(query)?embed=episodes") else {
@@ -106,26 +128,29 @@ struct MyCalendar: View {
             let (data, _) = try await URLSession.shared.data(from: url)
             let results = try JSONDecoder().decode(ShowBase.self, from: data)
             show = results
+            allBaseShows.append(show)
         } catch {
             self.error = error.localizedDescription
         }
     }
     /// Returns episodes from the base show that come after the given watched episode
     /// Compares via season and episode numbers since airdate strings may be unreliable
-    func upcomingEpisodes(after watchedEpisode: Episode, in baseShow: ShowBase) -> [EpisodeBase] {
-        // Flatten all episodes in base show
-        let allEpisodes = baseShow.episodes
-        
-        // Filter episodes that come after the watched episode
-        allEpisodes.filter { ep in
-            // Compare season first, then episode number
-            if ep.season > watchedEpisode.season {
+    func upcomingEpisodes(after watchedEpisode: MyEpisode, in baseShow: ShowBase) -> [EpisodeBase] {
+        // Get all episodes from the base show
+        let allEpisodes = baseShow.embedded?.episodes ?? []
+        let upcoming = allEpisodes.filter { ep in
+            if let epSeason = ep.season, let watchedSeason = watchedEpisode.season, epSeason > watchedSeason {
                 return true
-            } else if ep.season == watchedEpisode.season && ep.episode > watchedEpisode.episode {
+            } else if ep.season == watchedEpisode.season,
+                      let epNumber = ep.number, let watchedNumber = watchedEpisode.number,
+                      epNumber > watchedNumber {
                 return true
             }
             return false
+        }.map { ep in
+            EpisodeBase(id: ep.id ?? 0, season: ep.season ?? 0, episode: ep.number ?? 0, title: ep.name ?? "", airdate: ep.airdate ?? "")
         }
+        return upcoming
     }
 }
 
@@ -133,13 +158,13 @@ struct MyCalendar: View {
 
 // Base show model representing the original show data (episodes)
 struct ShowBaseAI: Identifiable {
-    let id: String
+    let id: Int
     let name: String
     let episodes: [EpisodeBase]
 }
 
 struct EpisodeBase: Identifiable {
-    let id: String
+    let id: Int
     let season: Int
     let episode: Int
     let title: String

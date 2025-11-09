@@ -96,28 +96,33 @@ struct myCalendar: View {
     }
     var body: some View {
         VStack {
+            Text("Episode aired on \(episode.airdate ?? "Unknown")")
             HStack {
                 Button("Save Date  ") {
                     print("Save Date............")
                     let newDateString = dateFormatter.string(from: selectedDate)
-                    _ = myshowsmodel.changeEpisode(myshowid: myshowid, episodeid: episode.id ?? 0, datewatched: newDateString)
+                    _ = myshowsmodel.changeEpisode(myshowid: myshowid, episodeid: episode.id ?? 0, season: episode.season ?? 0, number: episode.number ?? 0,  datewatched: newDateString)
                     isOnFile = true
                     dismiss()
                 }
+                .buttonStyle(myButtonStyle())
                 Button("Today") {
                     print("Today..............")
                     selectedDate = Date()
                 }
+                .buttonStyle(myButtonStyle())
                 Button("UnWatched  ") {
                                     print("UnWatched............")
                                     myshowsmodel.deleteepisode(myshowid: myshowid, episodeid: episode.id ?? 0)
                                     isOnFile = false
                                     dismiss()
                                 }
+                .buttonStyle(myButtonStyle())
                 Button("Cancel") {
                     print("cancel.............")
                     dismiss()
                 }
+                .buttonStyle(myButtonStyle())
             }
             DatePicker("Select Watched Date", selection: $selectedDate, displayedComponents: .date)
                 .datePickerStyle(.graphical)

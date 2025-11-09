@@ -63,20 +63,22 @@ class MyShowsModel: ObservableObject {
         guard let episode = show.episodes.first(where: { $0.id == episodeid }) else { return ""}
         return episode.dateWatched
     }
-    func changeEpisode(myshowid: Int, episodeid: Int, datewatched: String) -> String {
+    func changeEpisode(myshowid: Int, episodeid: Int, season: Int, number: Int, datewatched: String) -> String {
         guard let showIndex = MyShows.firstIndex(where: { $0.id == myshowid }) else {
             print("changeEpisode: no show")
             return ""
         }
         guard let episodeIndex = MyShows[showIndex].episodes.firstIndex(where: { $0.id == episodeid }) else {
             // there is no episode, so add it
-            addepisode(myshowid: myshowid, episode: episodeid, datewatched: datewatched)
+            addepisode(myshowid: myshowid, episode: episodeid, season: season, number: number, datewatched: datewatched)
             print("changeEpisode: added episode")
             saveMy()
             return datewatched
         }
         // we have the episode, so update it from episodes array
         var episodes = MyShows[showIndex].episodes
+        episodes[episodeIndex].season = season
+        episodes[episodeIndex].number = number
         episodes[episodeIndex].dateWatched = datewatched
 
         let show = MyShows[showIndex]
@@ -102,9 +104,9 @@ class MyShowsModel: ObservableObject {
         return episodes[episodeIndex].dateWatched
 
     }
-    func addepisode(myshowid: Int, episode: Int, datewatched: String) {
+    func addepisode(myshowid: Int, episode: Int, season: Int, number: Int, datewatched: String) {
         guard let index = MyShows.firstIndex(where: { $0.id == myshowid }) else { return }
-        let newEpisode = MyEpisode(id: episode, dateWatched: datewatched)
+        let newEpisode = MyEpisode(id: episode, season: season, number: number, dateWatched: datewatched)
         MyShows[index].episodes.append(newEpisode)
     }
     func deleteepisode(myshowid: Int, episodeid: Int) {

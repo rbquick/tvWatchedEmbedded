@@ -17,7 +17,7 @@ struct tvWatchedEmbeddedApp: App {
                     .tabItem {
                         Label("Shows", systemImage: "list.bullet")
                     }
-                MyCalendar()
+                MyCalendarView()
                     .tabItem {
                         Label("Calendar", systemImage: "calendar")
                     }
