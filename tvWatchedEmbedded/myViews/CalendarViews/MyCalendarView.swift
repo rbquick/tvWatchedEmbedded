@@ -25,12 +25,19 @@ struct MyCalendarView: View {
             List(showsWithUpcomingEpisodes, id: \.id) { myShow in
                 VStack(alignment: .leading) {
                     Text(myShow.name)
-                    ForEach(myShow.episodes.filter { !$0.dateWatched.isEmpty }, id: \.id) { watchedEpisode in                        // Show info about the watched episode
-                        Text("Watched: S\(watchedEpisode.season ?? 0)E\(watchedEpisode.number ?? 0) ")
+                    // ai start only list last episode watched with upcoming episodes after that episode
+                    if let lastWatched = myShow.episodes
+                        .filter({ !$0.dateWatched.isEmpty })
+                        .max(by: {
+                            ($0.season ?? 0, $0.number ?? 0) < ($1.season ?? 0, $1.number ?? 0)
+                        }) {
+                        
+                        // Use lastWatched episode here
+                        Text("Watched: S\(lastWatched.season ?? 0)E\(lastWatched.number ?? 0)")
                             .font(.subheadline)
-                        // Find next upcoming episode(s) in base show after this watched episode
+                        
                         if let baseShow = allBaseShows.first(where: { $0.id == myShow.id }) {
-                            let upcoming = upcomingEpisodes(after: watchedEpisode, in: baseShow)
+                            let upcoming = upcomingEpisodes(after: lastWatched, in: baseShow)
                             if !upcoming.isEmpty {
                                 ForEach(upcoming, id: \.id) { ep in
                                     Text("Upcoming: S\(ep.season)E\(ep.episode) - \(ep.title) (Airdate: \(ep.airdate))")
@@ -39,8 +46,10 @@ struct MyCalendarView: View {
                                 }
                             }
                         }
-                        
                     }
+
+                    // ai end
+
                 }
             }
             // Display list of shows with upcoming episodes after watched ones
@@ -111,10 +120,9 @@ struct MyCalendarView: View {
         allBaseShows.removeAll()
         var i = 0
         repeat {
-            if !myshowsmodel.MyShows[i].episodes.isEmpty  {
-                
+//            if !myshowsmodel.MyShows[i].episodes.isEmpty  {
                 await loadShows(query: myshowsmodel.MyShows[i].id)
-            }
+//            }
                 i += 1
             } while i < myshowsmodel.MyShows.count
         
