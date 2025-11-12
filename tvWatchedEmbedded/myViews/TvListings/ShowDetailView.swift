@@ -19,7 +19,7 @@ struct ShowDetailView: View {
     @State private var error: String?
     
     init(myshow: MyShow) {
-         self.myshow = myshow
+        self.myshow = myshow
          // Initialize the state from myshow property
          _apollo = State(initialValue: myshow.Apollo)
         _kodi = State(initialValue: myshow.Kodi)
@@ -110,7 +110,6 @@ struct ShowDetailView: View {
                     .foregroundColor(.red)
             }
         }
-        .background(.red.opacity(1.0))
         .onAppear {
             Task {
                 await loadShows(query: myshow.id)

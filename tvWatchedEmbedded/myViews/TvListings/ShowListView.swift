@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 enum ShowSourceFilter: String, CaseIterable, Identifiable {
     case all = "All"
     case apollo = "Apollo"
@@ -16,7 +17,9 @@ enum ShowSourceFilter: String, CaseIterable, Identifiable {
 
 struct ShowListView: View {
     @EnvironmentObject var myshowsmodel: MyShowsModel
+    @Environment(\.selectedShowID) var selectedShowID
 
+    @State private var showingShowDetailView: Int? = nil
     @State private var showingSearch = false
     
     @State private var searchText: String = ""
@@ -44,21 +47,44 @@ struct ShowListView: View {
         NavigationView {
             VStack {
                 Picker("Source", selection: $selectedSource) {
-                    ForEach(ShowSourceFilter.allCases) { filter in
-                        Text(filter.rawValue).tag(filter)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .padding(.horizontal)
+                                    ForEach(ShowSourceFilter.allCases) { filter in
+                                        Text(filter.rawValue).tag(filter)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                                .padding(.horizontal)
                 
-                List {
-                    ForEach(filteredShows) { myshow in
-                        NavigationLink(destination: ShowDetailView(myshow: myshow)) {
-                            Text(myshow.name)
+                ScrollViewReader { proxy in
+                    List {
+                        ForEach(filteredShows) { myshow in
+                            NavigationLink(
+                                destination: ShowDetailView(myshow: myshow),
+                                tag: myshow.id,
+                                selection: $showingShowDetailView
+                            )
+                                {
+                                                               Text(myshow.name)
+                                                           }
+                                    .id(myshow.id)
+                        }
+                        .onDelete(perform: myshowsmodel.delete)
+                        
+                    }  // end of list
+
+                    .onAppear {
+                        if let selID = selectedShowID?.wrappedValue, filteredShows.contains(where: { $0.id == selID }) {
+                            proxy.scrollTo(selID, anchor: .center)
+                            showingShowDetailView = selID
                         }
                     }
-                    .onDelete(perform: myshowsmodel.delete)
-                }
+                    .onChange(of: selectedShowID?.wrappedValue) { _, newID in
+                        if let selID = newID, filteredShows.contains(where: { $0.id == selID }) {
+                            proxy.scrollTo(selID, anchor: .center)
+                            showingShowDetailView = selID
+                        }
+                    }
+                }  // end of ScrollViewReader
+                
             }
             .navigationTitle("Shows")
             .navigationBarTitleDisplayMode(.inline)
@@ -76,9 +102,12 @@ struct ShowListView: View {
             .searchable(text: $searchText, prompt: "Filter shows") // Adds a native search bar
         }
     }
+
+
 }
 
 #Preview {
     ShowListView()
         .environmentObject(MyShowsModel())
 }
+

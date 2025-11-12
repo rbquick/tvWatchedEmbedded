@@ -10,9 +10,15 @@ import SwiftUI
 struct MyCalendarView: View {
     @EnvironmentObject var myshowsmodel: MyShowsModel
     
+    @Environment(\.selectedTab) var selectedTab
+    @Environment(\.selectedShowID) var selectedShowID
+    
     // Holds all base shows loaded asynchronously
     @State private var show: ShowBase = ShowBase()
     @State private var allBaseShows: [ShowBase] = []
+    
+    // number of episodes that will be listed on a show
+    @State var episodecnt = 2
     
     // Holds any error messages during loading (not yet used)
     @State private var error: String?
@@ -20,11 +26,33 @@ struct MyCalendarView: View {
     var body: some View {
         
         VStack {
-            Text("My Calendar \(myshowsmodel.MyShows.count)")
-            Text("allBaseShows: \(allBaseShows.count)")
-            List(showsWithUpcomingEpisodes, id: \.id) { myShow in
+//            List(showsWithUpcomingEpisodes, id: \.id) { myShow in
+            // new let and list start
+            let showsWithFutureEpisodes = showsWithUpcomingEpisodes.filter { show in
+                if let lastWatched = show.episodes.filter({ !$0.dateWatched.isEmpty }).max(by: {
+                    ($0.season ?? 0, $0.number ?? 0) < ($1.season ?? 0, $1.number ?? 0) }) {
+                    if let baseShow = allBaseShows.first(where: { $0.id == show.id }) {
+                        let upcoming = upcomingEpisodes(after: lastWatched, in: baseShow)
+                        return !upcoming.isEmpty
+                    }
+                }
+                return false
+            }
+            HStack {
+                Text("My Calendar \(myshowsmodel.MyShows.count)")
+                Text("allBaseShows: \(showsWithFutureEpisodes.count)")
+                Spacer()
+                Text("Number of episodes to showing \(episodecnt):")
+                    Stepper(value: $episodecnt, in: 1...30) {
+                        EmptyView() // No label inside Stepper, so only the +/- buttons show
+                    }
+                    .frame(width: 100) // Optional: fix width of Stepper to keep it tight
+                
+            }
+            .padding(.horizontal)
+            List(showsWithFutureEpisodes, id: \.id) { myShow in
+            // nes let and list end
                 VStack(alignment: .leading) {
-                    Text(myShow.name)
                     // ai start only list last episode watched with upcoming episodes after that episode
                     if let lastWatched = myShow.episodes
                         .filter({ !$0.dateWatched.isEmpty })
@@ -33,54 +61,50 @@ struct MyCalendarView: View {
                         }) {
                         
                         // Use lastWatched episode here
-                        Text("Watched: S\(lastWatched.season ?? 0)E\(lastWatched.number ?? 0)")
-                            .font(.subheadline)
+                        let thisEpisodeName = baseShowEpisodeName(showid: myShow.id, season: lastWatched.season ?? 0, episode: lastWatched.number ?? 0)
+                        
                         
                         if let baseShow = allBaseShows.first(where: { $0.id == myShow.id }) {
                             let upcoming = upcomingEpisodes(after: lastWatched, in: baseShow)
                             if !upcoming.isEmpty {
-                                ForEach(upcoming, id: \.id) { ep in
-                                    Text("Upcoming: S\(ep.season)E\(ep.episode) - \(ep.title) (Airdate: \(ep.airdate))")
+                                HStack {
+                                    Text(myShow.name)
+                                        .font(.title)
+                                    Spacer()
+                                    if myShow.Apollo {
+                                        Button("Apollo") {
+                                            print("Today..............")
+                                            selectedTab?.wrappedValue = 0
+                                            selectedShowID?.wrappedValue = myShow.id
+                                        }
+                                        .buttonStyle(myButtonStyle())
+                                    }
+                                    if myShow.Kodi {
+                                        Button("Koli") {
+                                            print("Today..............")
+                                            selectedTab?.wrappedValue = 0
+                                            selectedShowID?.wrappedValue = myShow.id
+                                        }
+                                        .buttonStyle(myButtonStyle())
+                                    }
+                                }
+                                HStack {
+                                    Text("Watched: S\(lastWatched.season ?? 0)E\(lastWatched.number ?? 0) \(thisEpisodeName)")
+                                        .font(.subheadline)
+                                    Spacer()
+                                    Text("\(upcoming.count) episodes coming")
+                                }
+                                
+                                let limitedupcoming = Array(upcoming.prefix(episodecnt))
+                                ForEach(limitedupcoming, id: \.id) { ep in                                        Text("Upcoming: S\(ep.season)E\(ep.episode) - \(ep.title) (Airdate: \(ep.airdate))")
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }
                             }
                         }
                     }
-
-                    // ai end
-
                 }
             }
-            // Display list of shows with upcoming episodes after watched ones
-//            List(showsWithUpcomingEpisodes, id: \.id) { myShow in
-//                VStack(alignment: .leading) {
-//                    Text(myShow.name)
-//                        .font(.headline)
-//                    
-//                    ForEach(myshowsmodel.myShow.episodes.filter { episode in
-//                        // Filter episodes that have been watched (dateWatched not empty)
-//                        !episode.dateWatched.isEmpty
-//                    }, id: \.id) { watchedEpisode in
-//                        // Show info about the watched episode
-//                        Text("Watched: S\(watchedEpisode.season)E\(watchedEpisode.episode) - \(watchedEpisode.title)")
-//                            .font(.subheadline)
-//                        
-//                        // Find next upcoming episode(s) in base show after this watched episode
-//                        if let baseShow = allBaseShows.first(where: { $0.id == myShow.id }) {
-//                            let upcoming = upcomingEpisodes(after: watchedEpisode, in: baseShow)
-//                            if !upcoming.isEmpty {
-//                                ForEach(upcoming, id: \.id) { ep in
-//                                    Text("Upcoming: S\(ep.season)E\(ep.episode) - \(ep.title) (Airdate: \(ep.airdate))")
-//                                        .font(.caption)
-//                                        .foregroundColor(.secondary)
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                .padding(.vertical, 4)
-//            }
         }
         // Load all base shows when view appears
         .onAppear {
@@ -89,7 +113,14 @@ struct MyCalendarView: View {
             }
         }
     }
-    
+    func baseShowEpisodeName(showid: Int, season: Int, episode: Int) -> String {
+        guard let baseshow = allBaseShows.first(where: {$0.id ?? 0 == showid}) else { return ""}
+        guard let baseepisodes = baseshow.embedded?.episodes else { return ""}
+        if let episode = baseepisodes.first(where: {$0.season == season && $0.number == episode}) {
+            return episode.name ?? ""
+        }
+        return ""
+    }
     /// Computed property that filters MyShows to those that have upcoming episodes after any watched episode
     var showsWithUpcomingEpisodes: [MyShow] {
         myshowsmodel.MyShows.filter { myShow in
@@ -184,9 +215,9 @@ struct EpisodeBase: Identifiable {
 //class MyShowsModelPreview: ObservableObject {
 //    @Published var MyShows: [MyShow] = []
 //}
-//
-//#Preview {
-//    MyCalendar()
-//        .environmentObject(MyShowsModelPreview())
-//}
+
+#Preview {
+    MyCalendarView()
+        .environmentObject(MyShowsModel())
+}
 
