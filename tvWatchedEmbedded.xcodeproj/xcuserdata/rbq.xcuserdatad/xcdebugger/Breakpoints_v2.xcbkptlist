@@ -174,9 +174,9 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
-            landmarkName = "updatedevice(myshowid:apollo:kodi:)"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
+            landmarkName = "updatedevice(myshowid:apollo:kodi:watching:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -190,9 +190,9 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
-            landmarkName = "updatedevice(myshowid:apollo:kodi:)"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "updatedevice(myshowid:apollo:kodi:watching:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -251,9 +251,41 @@
             filePath = "tvWatchedEmbedded/myViews/CalendarViews/MyCalendarView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "190"
-            endingLineNumber = "190"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
             landmarkName = "upcomingEpisodes(after:in:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A39A18A6-48B7-4668-AFCE-D7DDE6A4ECF2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/myViews/TvListings/ShowDetailView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
+            landmarkName = "refreshShowDetails()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5F47B0A5-725A-4046-B82A-FED8DF859DF1"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/MyStructures/DataStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "loadShows(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

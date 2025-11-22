@@ -80,17 +80,32 @@ class MyShowsModel: ObservableObject {
         episodes[episodeIndex].season = season
         episodes[episodeIndex].number = number
         episodes[episodeIndex].dateWatched = datewatched
-
+        episodes.sort {
+            if $0.season == $1.season {
+                return ($0.number ?? 0) > ($1.number ?? 0)
+            } else {
+                return ($0.season ?? 0) > ($1.season ?? 0)
+            }
+        }
         let show = MyShows[showIndex]
         let updatedShow = MyShow(id: show.id,
                                 name: show.name,
                                 Kodi: show.Kodi,
                                 Apollo: show.Apollo,
+                                Watching:  show.Watching,
                                 episodes: episodes)
         print("changeEpisode: updated episode")
         MyShows[showIndex] = updatedShow
         saveMy()
         return ""
+    }
+    func getmyshow(myshowid: Int) -> MyShow {
+        guard let showIndex = MyShows.firstIndex(where: { $0.id == myshowid }) else {
+            let nofoundshow = MyShow(id: 0, name: "no show", Kodi: false, Apollo: false, Watching: false, episodes: [])
+            return nofoundshow
+        }
+        print("getmyshow: \(MyShows[showIndex].name), \(MyShows[showIndex].episodes.count)")
+        return MyShows[showIndex]
     }
     func getmyepisodeDateWatched(myshowid: Int, episodeid: Int) -> String {
         guard let showIndex = MyShows.firstIndex(where: { $0.id == myshowid }) else {
@@ -108,6 +123,13 @@ class MyShowsModel: ObservableObject {
         guard let index = MyShows.firstIndex(where: { $0.id == myshowid }) else { return }
         let newEpisode = MyEpisode(id: episode, season: season, number: number, dateWatched: datewatched)
         MyShows[index].episodes.append(newEpisode)
+        MyShows[index].episodes.sort { 
+            if $0.season == $1.season {
+                return ($0.number ?? 0) > ($1.number ?? 0)
+            } else {
+                return ($0.season ?? 0) > ($1.season ?? 0)
+            }
+        }
     }
     func deleteepisode(myshowid: Int, episodeid: Int) {
         guard let showIndex = MyShows.firstIndex(where: { $0.id == myshowid }) else {
@@ -119,12 +141,12 @@ class MyShowsModel: ObservableObject {
                 // we have the episode, so update it from episodes array
             MyShows[showIndex].episodes.remove(atOffsets: [episodeIndex])
         }
-    func updatedevice(myshowid: Int, apollo: Bool, kodi: Bool) {
+    func updatedevice(myshowid: Int, apollo: Bool, kodi: Bool, watching: Bool) {
         guard let show = MyShows.first(where: { $0.id == myshowid })
                        else {
                     return
                 }
-        let newshow = MyShow(id: show.id, name: show.name, Kodi: kodi, Apollo: apollo, episodes: show.episodes)
+        let newshow = MyShow(id: show.id, name: show.name, Kodi: kodi, Apollo: apollo, Watching: watching, episodes: show.episodes)
         
         update(show: newshow)
     }
@@ -140,3 +162,5 @@ class MyShowsModel: ObservableObject {
 //        myshowsxx.append(showxx)
 //
 //        print(showxx)
+
+

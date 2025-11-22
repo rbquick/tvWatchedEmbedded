@@ -9,8 +9,9 @@ import SwiftUI
 
 struct ShowDetailView: View {
     let myshow: MyShow
-    @State private var apollo: Bool
-    @State private var kodi: Bool
+    @State private var apollo: Bool = false
+    @State private var kodi: Bool = false
+    @State private var watching: Bool = false
     @State private var scrollepisodeID: Int = 0
     @State var show: ShowBase = ShowBase()
     @EnvironmentObject var myshowsmodel: MyShowsModel
@@ -18,15 +19,15 @@ struct ShowDetailView: View {
     
     @State private var error: String?
     
-    init(myshow: MyShow) {
-        self.myshow = myshow
-         // Initialize the state from myshow property
-         _apollo = State(initialValue: myshow.Apollo)
-        _kodi = State(initialValue: myshow.Kodi)
-        if myshow.episodes.count > 0 {
-            _scrollepisodeID = State(initialValue: myshow.episodes[0].id)
-        }
-     }
+//    init(myshow: MyShow) {
+//        self.myshow = myshow
+//         // Initialize the state from myshow property
+//         _apollo = State(initialValue: myshow.Apollo)
+//        _kodi = State(initialValue: myshow.Kodi)
+//        if myshow.episodes.count > 0 {
+//            _scrollepisodeID = State(initialValue: myshow.episodes[0].id)
+//        }
+//     }
     
     var sortedEpisodes: [Episodes] {
         (show.embedded?.episodes ?? []).sorted {
@@ -60,10 +61,18 @@ struct ShowDetailView: View {
                 
                 HStack() {
 //                    Text("\(scrollepisodeID)")  // put this in for testing to show the episode.id
+                    Toggle(isOn: $watching) {
+                        Text(apollo ? "watching" : "NOT watching" )
+                            .onChange(of: watching) { oldValue, newValue in
+                                myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: kodi, watching: newValue)
+                                print("watching: \(watching) apollo: \(apollo) kodi: \(kodi)")
+                            }
+                    }
+                    .toggleStyle(.automatic)
                     Toggle(isOn: $apollo) {
                         Text(apollo ? "On Appollo" : "NOT on Appollo" )
                             .onChange(of: apollo) { oldValue, newValue in
-                                myshowsmodel.updatedevice(myshowid: myshow.id, apollo: newValue, kodi: kodi)
+                                myshowsmodel.updatedevice(myshowid: myshow.id, apollo: newValue, kodi: kodi, watching: watching)
                                 print("apollo: \(apollo) kodi: \(kodi)")
                             }
                     }
@@ -72,7 +81,7 @@ struct ShowDetailView: View {
                     Toggle(isOn: $kodi) {
                         Text(kodi ? "On Kodi" : "NOT on Kodi")
                             .onChange(of: kodi) { oldValue, newValue in
-                                myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: newValue)
+                                myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: newValue, watching: watching)
                                 print("apollo: \(apollo) Kodi: \(kodi)")
                             }
                     }
@@ -97,7 +106,12 @@ struct ShowDetailView: View {
                         .id(episode.id)
                     }
                     .onAppear {
-                        proxy.scrollTo(scrollepisodeID, anchor: .bottom)
+                        proxy.scrollTo(scrollepisodeID, anchor: .center)
+                    }
+                    .onChange(of: show.id) { _, _ in
+                        if myshow.episodes.isEmpty { return }
+                        scrollepisodeID = myshow.episodes.first!.id
+                        proxy.scrollTo(scrollepisodeID, anchor: .center)
                     }
                 }
             } else {
@@ -111,9 +125,10 @@ struct ShowDetailView: View {
             }
         }
         .onAppear {
-            Task {
-                await loadShows(query: myshow.id)
-            }
+            refreshShowDetails()
+        }
+        .onChange(of: myshow.id) { _, _ in
+            refreshShowDetails()
         }
         .onDisappear {
             myshowsmodel.saveMy()
@@ -130,7 +145,19 @@ struct ShowDetailView: View {
             let results = try JSONDecoder().decode(ShowBase.self, from: data)
             show = results
         } catch {
+            print(error.localizedDescription)
             self.error = error.localizedDescription
+        }
+    }
+    private func refreshShowDetails() {
+        Task {
+            await loadShows(query: myshow.id)
+        }
+        apollo = myshow.Apollo
+        kodi = myshow.Kodi
+        watching = myshow.Watching
+        if myshow.episodes.count > 0 {
+            scrollepisodeID = myshow.episodes[0].id
         }
     }
 }
@@ -139,3 +166,4 @@ struct ShowDetailView: View {
     ShowDetailView(myshow: MyShow())
         .environmentObject(MyShowsModel())
 }
+

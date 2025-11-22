@@ -151,9 +151,11 @@ struct MyCalendarView: View {
         allBaseShows.removeAll()
         var i = 0
         repeat {
-//            if !myshowsmodel.MyShows[i].episodes.isEmpty  {
-                await loadShows(query: myshowsmodel.MyShows[i].id)
-//            }
+            if myshowsmodel.MyShows.count > 0 {
+                if !myshowsmodel.MyShows[i].episodes.isEmpty  {
+                    await loadShows(query: myshowsmodel.MyShows[i].id)
+                }
+            }
                 i += 1
             } while i < myshowsmodel.MyShows.count
         
