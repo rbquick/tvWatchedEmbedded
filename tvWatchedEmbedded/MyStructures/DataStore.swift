@@ -23,6 +23,31 @@ class DataStore {
     private var fileURL: URL? {
         iCloudDocumentsURL?.appendingPathComponent(fileName)
     }
+    private var backupURL: URL? {
+            let filedate = myDateFormatter(inDate: Date())
+            let filename = "myshows-\(filedate).json"
+          return iCloudDocumentsURL?.appendingPathComponent(filename)
+       }
+
+    // Save shows array to iCloud JSON file
+    func backupShows<T: Encodable>(_ shows: [T]) {
+        guard let fileURL = backupURL else {
+            print("iCloud container not available")
+            return
+        }
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let data = try encoder.encode(shows)
+            // Ensure the Documents directory exists
+            try FileManager.default.createDirectory(at: fileURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+            // Write data to file URL with iCloud ubiquity
+            try data.write(to: fileURL, options: [.atomic])
+            print("Saved shows to iCloud at \(fileURL)")
+        } catch {
+            print("Error saving shows to iCloud:", error)
+        }
+    }
 
     // Save shows array to iCloud JSON file
     func saveShows<T: Encodable>(_ shows: [T]) {

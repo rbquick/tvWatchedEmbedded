@@ -54,39 +54,48 @@ struct ShowDetailView: View {
                         ProgressView()
                     }
                 }
-                VStack {
-                    Text(myshow.name)
-                        .font(.largeTitle)
-                        .bold()
-                
-                HStack() {
-//                    Text("\(scrollepisodeID)")  // put this in for testing to show the episode.id
-                    Toggle(isOn: $watching) {
-                        Text(apollo ? "watching" : "NOT watching" )
-                            .onChange(of: watching) { oldValue, newValue in
-                                myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: kodi, watching: newValue)
-                                print("watching: \(watching) apollo: \(apollo) kodi: \(kodi)")
-                            }
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text(myshow.name)
+                            .font(.largeTitle)
+                            .bold()
                     }
-                    .toggleStyle(.automatic)
-                    Toggle(isOn: $apollo) {
-                        Text(apollo ? "On Appollo" : "NOT on Appollo" )
-                            .onChange(of: apollo) { oldValue, newValue in
-                                myshowsmodel.updatedevice(myshowid: myshow.id, apollo: newValue, kodi: kodi, watching: watching)
-                                print("apollo: \(apollo) kodi: \(kodi)")
-                            }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    HStack(alignment: .center, spacing: 16) {
+                        HStack(spacing: 4) {
+                            Toggle("", isOn: $watching)
+                                .labelsHidden()
+                                .toggleStyle(.switch)
+                                .frame(minWidth: 0, alignment: .leading)
+                                .onChange(of: watching) { oldValue, newValue in
+                                    myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: kodi, watching: newValue)
+                                    print("watching: \(watching) apollo: \(apollo) kodi: \(kodi)")
+                                }
+                            Text(watching ? "watching" : "NOT watching")
+                        }
+                        HStack(spacing: 4) {
+                            Toggle("", isOn: $apollo)
+                                .labelStyle(.automatic)
+                                .frame(minWidth: 0, alignment: .leading)
+                                .onChange(of: apollo) { oldValue, newValue in
+                                    myshowsmodel.updatedevice(myshowid: myshow.id, apollo: newValue, kodi: kodi, watching: watching)
+                                    print("apollo: \(apollo) kodi: \(kodi)")
+                                }
+                            Text(apollo ? "On Appollo" : "NOT on Appollo")
+                        }
+                        HStack(spacing: 4) {
+                            Toggle("", isOn: $kodi)
+                                .labelStyle(.automatic)
+                                .frame(minWidth: 0, alignment: .leading)
+                                .onChange(of: kodi) { oldValue, newValue in
+                                    myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: newValue, watching: watching)
+                                    print("apollo: \(apollo) Kodi: \(kodi)")
+                                }
+                            Text(kodi ? "On Kodi" : "NOT on Kodi")
+                        }
+                        Spacer()
                     }
-                    .toggleStyle(.automatic)
-                    
-                    Toggle(isOn: $kodi) {
-                        Text(kodi ? "On Kodi" : "NOT on Kodi")
-                            .onChange(of: kodi) { oldValue, newValue in
-                                myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: newValue, watching: watching)
-                                print("apollo: \(apollo) Kodi: \(kodi)")
-                            }
-                    }
-                    .toggleStyle(.automatic)
-                }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
             }

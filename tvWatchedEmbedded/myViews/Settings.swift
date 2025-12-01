@@ -8,8 +8,15 @@
 import SwiftUI
 
 struct Settings: View {
+    
+    @EnvironmentObject var myshowsmodel: MyShowsModel
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Backup all shows")
+        Button("Backup") {
+                                print("Button Backup shows")
+            DataStore.shared.backupShows(myshowsmodel.MyShows)
+                            }
+        .buttonStyle(myButtonStyle())
     }
 }
 

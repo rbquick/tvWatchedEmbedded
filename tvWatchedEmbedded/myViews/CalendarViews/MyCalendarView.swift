@@ -71,6 +71,14 @@ struct MyCalendarView: View {
                                     Text(myShow.name)
                                         .font(.title)
                                     Spacer()
+                                    if myShow.Watching {
+                                        Button("Watching") {
+                                            print("Today..............")
+                                            selectedTab?.wrappedValue = 0
+                                            selectedShowID?.wrappedValue = myShow.id
+                                        }
+                                        .buttonStyle(myButtonStyle())
+                                    }
                                     if myShow.Apollo {
                                         Button("Apollo") {
                                             print("Today..............")

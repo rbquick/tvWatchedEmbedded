@@ -19,12 +19,6 @@ struct EpisodeDetailView: View {
     // For showing or hiding the picker
     @State  var showDatePicker: Bool = false
     
-    // Date formatter to convert between String and Date
-    private var dateFormatter: DateFormatter {
-        let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd" // match your date string format
-        return df
-    }
     var body: some View {
         VStack {
             Text(episode.name ?? "Unknown")
@@ -52,7 +46,7 @@ struct EpisodeDetailView: View {
                     print("Button Watch Episode")
                     showDatePicker.toggle()
                 } label: {
-                    Text(isOnFile ? "Watched \(dateFormatter.string(from: selectedDate))" : "Not Watched")
+                    Text(isOnFile ? "Watched \(myDateFormatter(inDate: selectedDate))" : "Not Watched")
                 }
                 .foregroundColor(
                     isOnFile ? .red : .blue
@@ -61,7 +55,7 @@ struct EpisodeDetailView: View {
                 .onAppear {
                     isOnFile = myshowsmodel.showepisodeOnFile(myshowid: myshowid, episodeid: id)
                     let dateString = myshowsmodel.showepisodeDatewatched(myshowid: myshowid, episodeid: id)
-                    if let date = dateFormatter.date(from: dateString) {
+                    if let date = myDateFormatter(inDate: dateString) {
                         selectedDate = date
                     }
                 }
@@ -88,19 +82,14 @@ struct myCalendar: View {
     @Binding var selectedDate: Date
     @EnvironmentObject var myshowsmodel: MyShowsModel
     @Environment(\.dismiss) private var dismiss
-    // Date formatter to convert between String and Date
-    private var dateFormatter: DateFormatter {
-        let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd" // match your date string format
-        return df
-    }
+
     var body: some View {
         VStack {
             Text("Episode aired on \(episode.airdate ?? "Unknown")")
             HStack {
                 Button("Save Date  ") {
                     print("Save Date............")
-                    let newDateString = dateFormatter.string(from: selectedDate)
+                    let newDateString = myDateFormatter(inDate: selectedDate)
                     _ = myshowsmodel.changeEpisode(myshowid: myshowid, episodeid: episode.id ?? 0, season: episode.season ?? 0, number: episode.number ?? 0,  datewatched: newDateString)
                     isOnFile = true
                     dismiss()
