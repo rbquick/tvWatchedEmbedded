@@ -9,12 +9,15 @@ import SwiftUI
 
 struct Scheduler: View {
     @EnvironmentObject var myshowsmodel: MyShowsModel
-    // Simulate allBaseShows as in MyCalendarView (should be injected/shared in real app)
-    @State var allBaseShows: [ShowBase] = []
     @State private var episodeDates: [Date: [(MyShow, EpisodeBase)]] = [:]
     @State private var selectedDates: [Date] = []
     @State private var viewStyle: CalendarViewStyle = .monthly
 
+    // Computed property instead of local let in body
+    private var sortedDates: [Date] {
+        episodeDates.keys.sorted()
+    }
+    
     enum CalendarViewStyle: String, CaseIterable, Identifiable {
         case monthly = "Month"
         case weekly = "Week"
@@ -38,7 +41,7 @@ struct Scheduler: View {
             Divider()
 
             if #available(iOS 17.0, macOS 14.0, *) {
-                SimpleCalendarGrid()
+                SimpleCalendarGrid(currentdate: Date(), selectedDate: Date())
                     .frame(maxHeight: 360)
                     .padding()
             } else {
@@ -46,6 +49,7 @@ struct Scheduler: View {
                     .foregroundColor(.red)
             }
             Divider()
+
             if !selectedDates.isEmpty {
                 Text("Episodes on Selected Dates:")
                     .font(.headline)
@@ -80,14 +84,14 @@ struct Scheduler: View {
     }
 
     func loadEpisodeDates() {
-        episodeDates.removeAll()
+        myshowsmodel.episodeDates.removeAll()
         for myShow in myshowsmodel.MyShows {
-            if let baseShow = allBaseShows.first(where: { $0.id == myShow.id }) {
+            if let baseShow = myshowsmodel.allBaseShows.first(where: { $0.id == myShow.id }) {
                 let episodes = baseShow.embedded?.episodes ?? []
                 for ep in episodes {
                     if let airdate = ep.airdate, !airdate.isEmpty, let date = calendarDateParser.date(from: airdate) {
                         let converted = EpisodeBase(id: ep.id ?? 0, season: ep.season ?? 0, episode: ep.number ?? 0, title: ep.name ?? "", airdate: airdate)
-                        episodeDates[date, default: []].append((myShow, converted))
+                        myshowsmodel.episodeDates[date, default: []].append((myShow, converted))
                     }
                 }
             }

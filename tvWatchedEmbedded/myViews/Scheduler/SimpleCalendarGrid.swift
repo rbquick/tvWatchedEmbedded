@@ -9,19 +9,21 @@ import SwiftUI
 
 struct SimpleCalendarGrid: View {
     let currentdate: Date
-    @State private var selectedDate: Date? = nil
+    @State var selectedDate: Date
     
     @EnvironmentObject var myshowsmodel: MyShowsModel
 
     private let calendar = Calendar.current
     private let daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
+    @State private var showUpcomingEpisodesView: Bool = false
+    
     var body: some View {
         let today = Date()
         let monthDates = generateDates(for: today)
 
         VStack {
-            Text("\(selectedDate ?? Date())")
+            Text("\(selectedDate.description)")
             // Days of week headers
             HStack {
                 ForEach(daysOfWeek, id: \.self) { day in
@@ -35,7 +37,7 @@ struct SimpleCalendarGrid: View {
                 ForEach(monthDates, id: \.self) { date in
                     Button(action: {
                         selectedDate = date
-                        
+                        showUpcomingEpisodesView = true
                     }) {
                         Text(dateText(date))
                             .frame(maxWidth: .infinity, minHeight: 36)
@@ -56,6 +58,9 @@ struct SimpleCalendarGrid: View {
             myshowsmodel.upcomingEpisodes = myshowsmodel.episodeDates.filter { date, _ in
                    date > Date()
                }
+        }
+        .sheet(isPresented: $showUpcomingEpisodesView) {
+            UpcomingEpisodesView(selectedDate: selectedDate)
         }
     }
 
@@ -101,6 +106,6 @@ struct SimpleCalendarGrid: View {
     }
 }
 
-#Preview {
-    SimpleCalendarGrid(currentdate: Date())
-}
+//#Preview {
+//    SimpleCalendarGrid(currentdate: Date())
+//}

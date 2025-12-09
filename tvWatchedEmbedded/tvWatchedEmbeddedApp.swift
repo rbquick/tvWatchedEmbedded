@@ -49,11 +49,17 @@ struct tvWatchedEmbeddedApp: App {
                         Label("Calendar", systemImage: "calendar")
                     }
                     .tag(1)
+                Scheduler()
+                    .tabItem {
+                        Label("Schedule", systemImage: "calendar.badge.plus")
+                    }
+                    .tag(2)
+                    
                 Settings()
                                     .tabItem {
-                                        Label("Settings", systemImage: "calendar")
+                                        Label("Settings", systemImage: "gearshape")
                                     }
-                                    .tag(2)
+                                    .tag(3)
             }
             .environment(\.selectedTab, $selectedTab)
             .environment(\.selectedShowID, $selectedShowID)
