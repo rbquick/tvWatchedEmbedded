@@ -12,6 +12,7 @@ struct ShowDetailView: View {
     @State private var apollo: Bool = false
     @State private var kodi: Bool = false
     @State private var watching: Bool = false
+    @State private var comments: String = ""
     @State private var scrollepisodeID: Int = 0
     @State var show: ShowBase = ShowBase()
     @EnvironmentObject var myshowsmodel: MyShowsModel
@@ -67,35 +68,39 @@ struct ShowDetailView: View {
                                 .labelsHidden()
                                 .toggleStyle(.switch)
                                 .frame(minWidth: 0, alignment: .leading)
-                                .onChange(of: watching) { oldValue, newValue in
-                                    myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: kodi, watching: newValue)
-                                    print("watching: \(watching) apollo: \(apollo) kodi: \(kodi)")
-                                }
                             Text(watching ? "watching" : "NOT watching")
                         }
                         HStack(spacing: 4) {
                             Toggle("", isOn: $apollo)
                                 .labelStyle(.automatic)
                                 .frame(minWidth: 0, alignment: .leading)
-                                .onChange(of: apollo) { oldValue, newValue in
-                                    myshowsmodel.updatedevice(myshowid: myshow.id, apollo: newValue, kodi: kodi, watching: watching)
-                                    print("apollo: \(apollo) kodi: \(kodi)")
-                                }
                             Text(apollo ? "On Appollo" : "NOT on Appollo")
                         }
                         HStack(spacing: 4) {
                             Toggle("", isOn: $kodi)
                                 .labelStyle(.automatic)
                                 .frame(minWidth: 0, alignment: .leading)
-                                .onChange(of: kodi) { oldValue, newValue in
-                                    myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: newValue, watching: watching)
-                                    print("apollo: \(apollo) Kodi: \(kodi)")
-                                }
                             Text(kodi ? "On Kodi" : "NOT on Kodi")
                         }
                         Spacer()
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    TextEditor(text: $comments)
+                        .frame(minHeight: 48, maxHeight: 80) // Adjust minHeight as desired for two lines
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                        )
+                        .padding(.vertical, 4)
+                    // Placeholder isn't natively supported, but label is clear from context
+                    HStack {
+                        Spacer()
+                        Button("Save") {
+                            print("Save..............")
+                            myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: kodi, watching: watching, comments: comments)
+                        }
+                        .buttonStyle(myButtonStyle(backgroundColor: .clear))
+                    }
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
             }
@@ -165,6 +170,7 @@ struct ShowDetailView: View {
         apollo = myshow.Apollo
         kodi = myshow.Kodi
         watching = myshow.Watching
+        comments = myshow.comments ?? ""
         if myshow.episodes.count > 0 {
             scrollepisodeID = myshow.episodes[0].id
         }

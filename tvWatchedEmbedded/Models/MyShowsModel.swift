@@ -37,7 +37,8 @@ class MyShowsModel: ObservableObject {
     func fetchMyShows() {
 
         if let loadedShows = DataStore.shared.loadShows([MyShow].self) {
-            MyShows = loadedShows.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+            // Sort ignoring leading articles like "A", "An", "The"
+            MyShows = loadedShows.sorted { normalizedTitle($0.name).localizedCaseInsensitiveCompare(normalizedTitle($1.name)) == .orderedAscending }
             loadTask()
             } else {
                 MyShows = []
@@ -45,9 +46,26 @@ class MyShowsModel: ObservableObject {
             }
         }
     
+    /// Normalizes a show title for sorting by removing common leading articles and trimming whitespace
+    private func normalizedTitle(_ title: String) -> String {
+        let lower = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        // List of common English articles to ignore at the start of titles
+        let articles = ["the ", "a ", "an "]
+        let lowercased = lower.lowercased()
+        for article in articles {
+            if lowercased.hasPrefix(article) {
+                // Drop the article length from the original-cased string to preserve original characters after the prefix
+                let dropCount = article.count
+                let dropped = String(lower.dropFirst(dropCount))
+                return dropped.trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+        }
+        return lower
+    }
+
     func addShow(_ show: MyShow) {
         MyShows.append(show)
-        MyShows.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        MyShows.sort { normalizedTitle($0.name).localizedCaseInsensitiveCompare(normalizedTitle($1.name)) == .orderedAscending }
     }
     func update(show: MyShow) {
         if let index = MyShows.firstIndex(of: show) {
@@ -110,6 +128,7 @@ class MyShowsModel: ObservableObject {
                                 Kodi: show.Kodi,
                                 Apollo: show.Apollo,
                                 Watching:  show.Watching,
+                                 comments: show.comments,
                                 episodes: episodes)
         print("changeEpisode: updated episode")
         MyShows[showIndex] = updatedShow
@@ -118,24 +137,13 @@ class MyShowsModel: ObservableObject {
     }
     func getmyshow(myshowid: Int) -> MyShow {
         guard let showIndex = MyShows.firstIndex(where: { $0.id == myshowid }) else {
-            let nofoundshow = MyShow(id: 0, name: "no show", Kodi: false, Apollo: false, Watching: false, episodes: [])
+            let nofoundshow = MyShow(id: 0, name: "no show", Kodi: false, Apollo: false, Watching: false, comments: "", episodes: [])
             return nofoundshow
         }
         print("getmyshow: \(MyShows[showIndex].name), \(MyShows[showIndex].episodes.count)")
         return MyShows[showIndex]
     }
-    func getmyepisodeDateWatched(myshowid: Int, episodeid: Int) -> String {
-        guard let showIndex = MyShows.firstIndex(where: { $0.id == myshowid }) else {
-            return ""
-        }
-        guard let episodeIndex = MyShows[showIndex].episodes.firstIndex(where: { $0.id == episodeid }) else {
-            return ""
-        }
-        // we have the episode, so update it from episodes array
-        let episodes = MyShows[showIndex].episodes
-        return episodes[episodeIndex].dateWatched
 
-    }
     func addepisode(myshowid: Int, episode: Int, season: Int, number: Int, datewatched: String) {
         guard let index = MyShows.firstIndex(where: { $0.id == myshowid }) else { return }
         let newEpisode = MyEpisode(id: episode, season: season, number: number, dateWatched: datewatched)
@@ -158,12 +166,12 @@ class MyShowsModel: ObservableObject {
                 // we have the episode, so update it from episodes array
             MyShows[showIndex].episodes.remove(atOffsets: [episodeIndex])
         }
-    func updatedevice(myshowid: Int, apollo: Bool, kodi: Bool, watching: Bool) {
+    func updatedevice(myshowid: Int, apollo: Bool, kodi: Bool, watching: Bool, comments: String? = nil) {
         guard let show = MyShows.first(where: { $0.id == myshowid })
                        else {
                     return
                 }
-        let newshow = MyShow(id: show.id, name: show.name, Kodi: kodi, Apollo: apollo, Watching: watching, episodes: show.episodes)
+        let newshow = MyShow(id: show.id, name: show.name, Kodi: kodi, Apollo: apollo, Watching: watching, comments: comments, episodes: show.episodes)
         
         update(show: newshow)
     }
@@ -282,72 +290,7 @@ class MyShowsModel: ObservableObject {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return episodes.contains(where: { dateFormatter.date(from: $0.airdate) == indate })
     }
-    func getEpisodeSchedule(startDate: Date) {
-        
-        let myShows = showsWithFutureEpisodesStrict()
-        for myShow in myShows {
-            if let baseShow = allBaseShows.first(where: { $0.id == myShow.id }) {
-                let episodes = baseShow.embedded?.episodes ?? []
-                for ep in episodes {
-                    if let airdate = ep.airdate, !airdate.isEmpty, let date = calendarDateParser.date(from: airdate) {
-                        let converted = EpisodeBase(id: ep.id ?? 0, season: ep.season ?? 0, episode: ep.number ?? 0, title: ep.name ?? "", airdate: airdate)
-                        episodeDates[date, default: []].append((myShow, converted))
-                    }
-                }
-            }
-        }
-//        for i in 0..<myShows.count - 1 {
-//            if let lastWatched = myShows[i].episodes
-//                                    .filter({ !$0.dateWatched.isEmpty })
-//                                    .max(by: {
-//                                        ($0.season ?? 0, $0.number ?? 0) < ($1.season ?? 0, $1.number ?? 0)
-//                                    })
-//            {
-//                let thisdate = myDateFormatter(inDate:
-//                                                lastWatched.dateWatched) ?? Date()
-//                episodeDates.append(thisdate)
-//            }
-//        }
-    }
-    /// Returns a limited array of upcoming EpisodeBase for a show after the last watched episode.
-    /// - Parameters:
-    ///   - show: The user's show instance.
-    ///   - episodeLimit: The maximum number of upcoming episodes to return.
-    /// - Returns: Array of EpisodeBase, limited to episodeLimit.
-    func limitedUpcomingEpisodes(for show: MyShow, episodeLimit: Int) -> [EpisodeBase] {
-        guard let lastWatched = show.episodes.filter({ !$0.dateWatched.isEmpty })
-            .max(by: { ($0.season ?? 0, $0.number ?? 0) < ($1.season ?? 0, $1.number ?? 0) }),
-              let baseShow = allBaseShows.first(where: { $0.id == show.id }) else {
-            return []
-        }
-        let upcoming = upcomingEpisodes(after: lastWatched, in: baseShow)
-        return Array(upcoming.prefix(episodeLimit))
-    }
-    /// Returns a flat array of all upcoming episodes (across all MyShows) that have an airdate on or after the provided start date.
-    /// - Parameter startDate: The first date to include episodes.
-    /// - Returns: Array of EpisodeBase for all upcoming episodes from all shows starting at the given date.
-    func allUpcomingEpisodes(from startDate: Date) -> [EpisodeBase] {
-        var result: [EpisodeBase] = []
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        for show in MyShows {
-            guard let lastWatched = show.episodes.filter({ !$0.dateWatched.isEmpty })
-                .max(by: { ($0.season ?? 0, $0.number ?? 0) < ($1.season ?? 0, $1.number ?? 0) }),
-                  let baseShow = allBaseShows.first(where: { $0.id == show.id }) else {
-                continue
-            }
-            let upcoming = upcomingEpisodes(after: lastWatched, in: baseShow)
-            let filtered = upcoming.filter { ep in
-                if let airdate = dateFormatter.date(from: ep.airdate) {
-                    return airdate >= startDate
-                }
-                return false
-            }
-            result.append(contentsOf: filtered)
-        }
-        return result
-    }
+
 }
         // sample code for tvmaze getting github going
 //        var episodes: [MyEpisode] = []
@@ -359,5 +302,6 @@ class MyShowsModel: ObservableObject {
 //        myshowsxx.append(showxx)
 //
 //        print(showxx)
+
 
 

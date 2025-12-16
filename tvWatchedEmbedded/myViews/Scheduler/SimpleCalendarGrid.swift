@@ -9,21 +9,37 @@ import SwiftUI
 
 struct SimpleCalendarGrid: View {
     let currentdate: Date
-    @State var selectedDate: Date
+    @State var selectedDate: Date = Date()
     
     @EnvironmentObject var myshowsmodel: MyShowsModel
 
     private let calendar = Calendar.current
     private let daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    
+    // Returns the first visible date for the calendar grid of the month containing referenceDate
+    // (i.e., the Sunday on or before the first day of that month)
+    private func firstVisibleDateOfMonth(containing referenceDate: Date) -> Date {
+        let components = calendar.dateComponents([.year, .month], from: referenceDate)
+        guard let monthStart = calendar.date(from: components) else { return referenceDate }
+        // weekday: 1=Sunday ... 7=Saturday in Gregorian
+        let weekday = calendar.component(.weekday, from: monthStart)
+        // Offset back to Sunday (0 if already Sunday)
+        let offset = 1 - weekday
+        return calendar.date(byAdding: .day, value: offset, to: monthStart) ?? monthStart
+    }
 
     @State private var showUpcomingEpisodesView: Bool = false
     
     var body: some View {
-        let today = Date()
-        let monthDates = generateDates(for: today)
+        // Use the provided currentdate to determine which month to show
+        let monthReference = currentdate
+        // First visible date (Sunday on/before the first of the month)
+        let gridStart = firstVisibleDateOfMonth(containing: monthReference)
+        let monthDates = generateDates(for: monthReference)
 
         VStack {
-            Text("\(selectedDate.description)")
+            Text(currentdate, format: Date.FormatStyle().month(.wide).day(.twoDigits).year())
+                .font(.title2)
             // Days of week headers
             HStack {
                 ForEach(daysOfWeek, id: \.self) { day in
@@ -47,16 +63,18 @@ struct SimpleCalendarGrid: View {
                             .clipShape(Circle())
                     }
                     .foregroundColor(isSameDay(date1: date, date2: selectedDate) ? .blue : .primary)
-                    .disabled(!calendar.isDate(date, equalTo: today, toGranularity: .month))
+//                    .disabled(!calendar.isDate(date, equalTo: monthReference, toGranularity: .month))
                 }
             }
         }
         .padding()
         .onAppear() {
-            selectedDate = currentdate
-            // Filter for upcoming only
+            selectedDate = firstVisibleDateOfMonth(containing: currentdate)
+
+        }
+        .onChange(of: currentdate) {
             myshowsmodel.upcomingEpisodes = myshowsmodel.episodeDates.filter { date, _ in
-                   date > Date()
+                   date >= firstVisibleDateOfMonth(containing: monthDates.first ?? Date())
                }
         }
         .sheet(isPresented: $showUpcomingEpisodesView) {
@@ -69,29 +87,36 @@ struct SimpleCalendarGrid: View {
         let components = calendar.dateComponents([.year, .month], from: referenceDate)
         guard let monthStart = calendar.date(from: components) else { return [] }
 
-        let range = calendar.range(of: .day, in: .month, for: monthStart)!
-        let firstWeekday = calendar.component(.weekday, from: monthStart)
+        guard let range = calendar.range(of: .day, in: .month, for: monthStart) else { return [] }
         let daysInMonth = range.count
 
-        // Fill leading days from previous month
+        // Compute first visible date (Sunday on or before first of month)
+        let firstWeekday = calendar.component(.weekday, from: monthStart) // 1=Sun..7=Sat
+        let offsetToSunday = 1 - firstWeekday
+        let firstVisible = calendar.date(byAdding: .day, value: offsetToSunday, to: monthStart) ?? monthStart
+
+        // We need enough cells to cover all days plus the leading days to align and trailing to complete weeks
+        // Start from firstVisible and continue until we've covered all days of the month and completed the last week row
         var dates: [Date] = []
-        for i in 1..<(firstWeekday) {
-            if let date = calendar.date(byAdding: .day, value: i - firstWeekday, to: monthStart) {
-                dates.append(date)
-            }
+        var current = firstVisible
+
+        // The grid must include at least all days of the month
+        // Determine the day after the end of the month
+        let endOfMonth = calendar.date(byAdding: .day, value: daysInMonth, to: monthStart) ?? monthStart
+
+        // Keep appending days until current >= endOfMonth and we end on a Saturday (weekday 7)
+        while true {
+            dates.append(current)
+            let next = calendar.date(byAdding: .day, value: 1, to: current) ?? current
+
+            // Break when we've passed the month and the current day is Saturday
+            let isPastEnd = next >= endOfMonth
+            let weekday = calendar.component(.weekday, from: current)
+            if isPastEnd && weekday == 7 { break }
+
+            current = next
         }
-        // Fill current month days
-        for day in 1...daysInMonth {
-            if let date = calendar.date(byAdding: .day, value: day - 1, to: monthStart) {
-                dates.append(date)
-            }
-        }
-        // Fill trailing days to complete last week row
-        while dates.count % 7 != 0 {
-            if let date = calendar.date(byAdding: .day, value: dates.count - firstWeekday + 1, to: monthStart) {
-                dates.append(date)
-            }
-        }
+
         return dates
     }
 

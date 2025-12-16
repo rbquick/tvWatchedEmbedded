@@ -13,10 +13,11 @@ struct MyShow: Codable, Equatable, Hashable, Identifiable {
     let Kodi: Bool
     let Apollo: Bool
     let Watching: Bool
+    let comments: String?
     var episodes: [MyEpisode]
     
     enum CodingKeys: String, CodingKey {
-        case id, name, Kodi, Apollo, Watching, episodes
+        case id, name, Kodi, Apollo, Watching, comments, episodes
     }
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -25,6 +26,7 @@ struct MyShow: Codable, Equatable, Hashable, Identifiable {
         self.Kodi = try container.decode(Bool.self, forKey: .Kodi)
         self.Apollo = try container.decode(Bool.self, forKey: .Apollo)
         self.Watching = try container.decodeIfPresent(Bool.self, forKey: .Watching) ?? false
+        self.comments = try container.decodeIfPresent(String.self, forKey: .comments)
         self.episodes = try container.decode([MyEpisode].self, forKey: .episodes)
     }
     // Encoding method to conform to Encodable
@@ -35,14 +37,16 @@ struct MyShow: Codable, Equatable, Hashable, Identifiable {
         try container.encode(Kodi, forKey: .Kodi)
         try container.encode(Apollo, forKey: .Apollo)
         try container.encode(Watching, forKey: .Watching)
+        try container.encodeIfPresent(comments, forKey: .comments)
         try container.encodeIfPresent(episodes, forKey: .episodes)
     }
-    init(id: Int = 74443, name: String = "New", Kodi: Bool = false, Apollo: Bool = false, Watching: Bool = false, episodes: [MyEpisode] = []) {
+    init(id: Int = 74443, name: String = "Newxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx x xxxx x  x x", Kodi: Bool = false, Apollo: Bool = false, Watching: Bool = false, comments: String? = nil, episodes: [MyEpisode] = []) {
         self.id = id
         self.name = name
         self.Kodi = Kodi
         self.Apollo = Apollo
         self.Watching = Watching
+        self.comments = comments
         self.episodes = episodes
     }
     static func == (lhs: MyShow, rhs: MyShow) -> Bool {

@@ -174,9 +174,9 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
-            landmarkName = "updatedevice(myshowid:apollo:kodi:watching:)"
+            startingLineNumber = "175"
+            endingLineNumber = "175"
+            landmarkName = "updatedevice(myshowid:apollo:kodi:watching:comments:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -190,9 +190,9 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
-            landmarkName = "updatedevice(myshowid:apollo:kodi:watching:)"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
+            landmarkName = "updatedevice(myshowid:apollo:kodi:watching:comments:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -251,8 +251,8 @@
             filePath = "tvWatchedEmbedded/myViews/TvListings/ShowDetailView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
             landmarkName = "refreshShowDetails()"
             landmarkType = "7">
          </BreakpointContent>
@@ -283,8 +283,8 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
             landmarkName = "loadShows(query:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -299,8 +299,8 @@
             filePath = "tvWatchedEmbedded/myViews/CalendarViews/MyCalendarView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -315,8 +315,8 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "231"
-            endingLineNumber = "231"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
             landmarkName = "showsWithUpcomingEpisodes"
             landmarkType = "24">
          </BreakpointContent>
@@ -331,8 +331,8 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "272"
-            endingLineNumber = "272"
+            startingLineNumber = "280"
+            endingLineNumber = "280"
             landmarkName = "showsWithFutureEpisodesStrict()"
             landmarkType = "7">
          </BreakpointContent>
@@ -347,8 +347,8 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "179"
-            endingLineNumber = "179"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
             landmarkName = "loadTask()"
             landmarkType = "7">
          </BreakpointContent>
@@ -363,8 +363,8 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "273"
-            endingLineNumber = "273"
+            startingLineNumber = "281"
+            endingLineNumber = "281"
             landmarkName = "showsWithFutureEpisodesStrict()"
             landmarkType = "7">
          </BreakpointContent>
@@ -379,8 +379,8 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "270"
-            endingLineNumber = "270"
+            startingLineNumber = "278"
+            endingLineNumber = "278"
             landmarkName = "showsWithFutureEpisodesStrict()"
             landmarkType = "7">
          </BreakpointContent>
@@ -395,8 +395,8 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
             landmarkName = "loadShows(query:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -411,8 +411,8 @@
             filePath = "tvWatchedEmbedded/myViews/Scheduler/Scheduler.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
             landmarkName = "loadEpisodeDates()"
             landmarkType = "7">
          </BreakpointContent>
@@ -427,8 +427,8 @@
             filePath = "tvWatchedEmbedded/myViews/Scheduler/Scheduler.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
             landmarkName = "loadEpisodeDates()"
             landmarkType = "7">
          </BreakpointContent>
@@ -443,8 +443,8 @@
             filePath = "tvWatchedEmbedded/myViews/Scheduler/Scheduler.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "90"
-            endingLineNumber = "90"
+            startingLineNumber = "121"
+            endingLineNumber = "121"
             landmarkName = "loadEpisodeDates()"
             landmarkType = "7">
          </BreakpointContent>
@@ -463,6 +463,102 @@
             endingLineNumber = "38"
             landmarkName = "body"
             landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "29B3BF85-1853-4F83-BDD8-E2E38253E2BE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/myViews/Scheduler/Scheduler.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D3C5AB87-25AE-4810-96EA-895BBE13EA91"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/myViews/Scheduler/SimpleCalendarGrid.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BA119D49-68B9-447E-AD08-D29A8904CFDE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/myViews/Scheduler/SimpleCalendarGrid.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "954790D6-098B-46D9-8DBD-BBBB52A2E5B5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/myViews/Scheduler/SimpleCalendarGrid.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "generateDates(for:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9A7CFBA8-ADBE-493F-A702-8E6B8A1344D5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/myViews/Scheduler/SimpleCalendarGrid.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DB55710B-B063-4FB2-831E-510E6085E1A8"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "170"
+            endingLineNumber = "170"
+            landmarkName = "updatedevice(myshowid:apollo:kodi:watching:comments:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

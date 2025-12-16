@@ -38,32 +38,36 @@ struct tvWatchedEmbeddedApp: App {
 
     var body: some Scene {
         WindowGroup {
-            TabView(selection: $selectedTab) {
-                ShowListView()
-                    .tabItem {
-                        Label("Shows", systemImage: "list.bullet")
-                    }
-                    .tag(0)
-                MyCalendarView()
-                    .tabItem {
-                        Label("Calendar", systemImage: "calendar")
-                    }
-                    .tag(1)
-                Scheduler()
-                    .tabItem {
-                        Label("Schedule", systemImage: "calendar.badge.plus")
-                    }
-                    .tag(2)
+        if !myshowsmodel.allBaseShowsComplete {
+            ProgressView("Loading shows…\(myshowsmodel.allBaseShows.count) of \(myshowsmodel.MyShows.count)")
+        } else {
+                TabView(selection: $selectedTab) {
+                    ShowListView()
+                        .tabItem {
+                            Label("Shows", systemImage: "list.bullet")
+                        }
+                        .tag(0)
+                    MyCalendarView()
+                        .tabItem {
+                            Label("Calendar", systemImage: "calendar")
+                        }
+                        .tag(1)
+                    Scheduler()
+                        .tabItem {
+                            Label("Schedule", systemImage: "calendar.badge.plus")
+                        }
+                        .tag(2)
                     
-                Settings()
-                                    .tabItem {
-                                        Label("Settings", systemImage: "gearshape")
-                                    }
-                                    .tag(3)
+                    Settings()
+                        .tabItem {
+                            Label("Settings", systemImage: "gearshape")
+                        }
+                        .tag(3)
+                }
+                .environment(\.selectedTab, $selectedTab)
+                .environment(\.selectedShowID, $selectedShowID)
+                .environmentObject(myshowsmodel)
             }
-            .environment(\.selectedTab, $selectedTab)
-            .environment(\.selectedShowID, $selectedShowID)
         }
-        .environmentObject(myshowsmodel)
     }
 }

@@ -11,16 +11,17 @@ struct Scheduler: View {
     @EnvironmentObject var myshowsmodel: MyShowsModel
     @State private var episodeDates: [Date: [(MyShow, EpisodeBase)]] = [:]
     @State private var selectedDates: [Date] = []
-    @State private var viewStyle: CalendarViewStyle = .monthly
-
+    @State private var viewStyle: CalendarViewStyle = .previous
+    @State private var currentDate: Date = Date()
     // Computed property instead of local let in body
     private var sortedDates: [Date] {
         episodeDates.keys.sorted()
     }
     
     enum CalendarViewStyle: String, CaseIterable, Identifiable {
-        case monthly = "Month"
-        case weekly = "Week"
+        case previous = "<<"
+        case current = "current"
+        case next = ">>"
         var id: String { self.rawValue }
     }
 
@@ -30,24 +31,36 @@ struct Scheduler: View {
                 Text("Scheduler - Calendar View")
                     .font(.title2)
                 Spacer()
-                Picker("View", selection: $viewStyle) {
-                    ForEach(CalendarViewStyle.allCases) { style in
-                        Text(style.rawValue).tag(style)
+                HStack(spacing: 8) {
+                    Button("<<") {
+                        viewStyle = .previous
+                        let interval = calendarInterval(for: .previous)
+                        currentDate = interval.start
                     }
+                    .buttonStyle(.bordered)
+
+                    Button("current") {
+                        viewStyle = .current
+                        let interval = calendarInterval(for: .current)
+                        currentDate = interval.start
+                    }
+                    .buttonStyle(.bordered)
+
+                    Button(">>") {
+                        viewStyle = .next
+                        let interval = calendarInterval(for: .next)
+                        currentDate = interval.start
+                    }
+                    .buttonStyle(.bordered)
                 }
-                .pickerStyle(.segmented)
-                .frame(width: 160)
+                .frame(width: 200)
             }.padding(.horizontal)
             Divider()
 
-            if #available(iOS 17.0, macOS 14.0, *) {
-                SimpleCalendarGrid(currentdate: Date(), selectedDate: Date())
+                SimpleCalendarGrid(currentdate: currentDate)
                     .frame(maxHeight: 360)
                     .padding()
-            } else {
-                Text("CalendarView requires iOS 17 or macOS 14+")
-                    .foregroundColor(.red)
-            }
+
             Divider()
 
             if !selectedDates.isEmpty {
@@ -69,17 +82,35 @@ struct Scheduler: View {
     }
 
     func calendarInterval(for style: CalendarViewStyle) -> DateInterval {
-        let now = Date()
         let calendar = Calendar.current
         switch style {
-        case .monthly:
-            let start = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) ?? now
-            let end = calendar.date(byAdding: .month, value: 1, to: start) ?? now
-            return DateInterval(start: start, end: end)
-        case .weekly:
-            let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now)) ?? now
-            let end = calendar.date(byAdding: .day, value: 7, to: weekStart) ?? now
-            return DateInterval(start: weekStart, end: end)
+        case .current:
+            // Keep currentDate as-is and return the interval for its month
+            if let interval = calendar.dateInterval(of: .month, for: Date()) {
+                return interval
+            }
+            // Fallback to now's month if needed
+            return calendar.dateInterval(of: .month, for: Date()) ?? DateInterval(start: Date(), end: Date())
+
+        case .previous:
+            // Move currentDate back one month and return that month interval
+            if let prev = calendar.date(byAdding: .month, value: -1, to: currentDate),
+               let interval = calendar.dateInterval(of: .month, for: prev) {
+                currentDate = prev
+                return interval
+            }
+            // Fallback: use current month interval
+            return calendar.dateInterval(of: .month, for: currentDate) ?? DateInterval(start: currentDate, end: currentDate)
+
+        case .next:
+            // Move currentDate forward one month and return that month interval
+            if let next = calendar.date(byAdding: .month, value: 1, to: currentDate),
+               let interval = calendar.dateInterval(of: .month, for: next) {
+                currentDate = next
+                return interval
+            }
+            // Fallback: use current month interval
+            return calendar.dateInterval(of: .month, for: currentDate) ?? DateInterval(start: currentDate, end: currentDate)
         }
     }
 
@@ -122,3 +153,4 @@ struct Scheduler: View {
     Scheduler()
         .environmentObject(MyShowsModel())
 }
+

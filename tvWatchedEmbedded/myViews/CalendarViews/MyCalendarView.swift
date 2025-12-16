@@ -25,9 +25,6 @@ struct MyCalendarView: View {
     var body: some View {
         
         VStack {
-            //            List(showsWithUpcomingEpisodes, id: \.id) { myShow in
-            // new let and list starts
-            
             HStack {
                 Text("My Calendar \(myshowsmodel.MyShows.count)")
                 Text("AllBaseShows: \(myshowsmodel.allBaseShows.count)")
