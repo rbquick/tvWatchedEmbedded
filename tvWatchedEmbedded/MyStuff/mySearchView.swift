@@ -10,7 +10,7 @@ import SwiftUI
 
 struct mySearchView: View {
 
-    @EnvironmentObject var vm: ListViewModel
+    @EnvironmentObject var vm: MyShowsModel
     private enum Field: Int, Hashable {
         case searchText
     }
@@ -20,7 +20,7 @@ struct mySearchView: View {
             Rectangle()
                 .foregroundColor(Color("SearchBar"))
             HStack {
-                Image(systemName: "magnifyingglass")
+//                Image(systemName: "magnifyingglass")
                     TextField("Search ...", text: $vm.searchText) { startedSearching in
                         if startedSearching {
                             withAnimation {
@@ -41,8 +41,8 @@ struct mySearchView: View {
                 Button(action:  {
                     vm.searchText = ""
                 }) {
-                    Image(systemName: "x.circle")
-                        .foregroundColor(.black)
+//                    Image(systemName: "x.circle")
+//                        .foregroundColor(.black)
                 }
             }
             .foregroundColor(.gray)
@@ -57,6 +57,6 @@ struct mySearchView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         mySearchView()
-            .environmentObject(ListViewModel())
+            .environmentObject(MyShowsModel())
     }
 }

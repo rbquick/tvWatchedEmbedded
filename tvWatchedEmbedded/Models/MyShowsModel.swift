@@ -16,6 +16,16 @@ class MyShowsModel: ObservableObject {
     @Published var allBaseShows: [ShowBase] = []
     @Published var allBaseShowsComplete: Bool = false
     
+    // search bar
+    @Published var searchIsShowing = false {
+        didSet {
+            searchText = ""
+            searching = false
+        }
+    }
+    @Published var searchText = ""
+    @Published var searching = false
+    
     var calendarDateParser: DateFormatter {
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd"

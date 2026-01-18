@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ShowDetailView: View {
-    let myshow: MyShow
+    var myshow: MyShow
     @State private var apollo: Bool = false
     @State private var kodi: Bool = false
     @State private var watching: Bool = false
@@ -19,6 +19,18 @@ struct ShowDetailView: View {
     
     
     @State private var error: String?
+    
+    @State private var originalApollo: Bool = false
+    @State private var originalKodi: Bool = false
+    @State private var originalWatching: Bool = false
+    @State private var originalComments: String = ""
+    
+    private var hasChanges: Bool {
+        apollo != originalApollo ||
+        kodi != originalKodi ||
+        watching != originalWatching ||
+        comments != originalComments
+    }
     
 //    init(myshow: MyShow) {
 //        self.myshow = myshow
@@ -98,8 +110,10 @@ struct ShowDetailView: View {
                         Button("Save") {
                             print("Save..............")
                             myshowsmodel.updatedevice(myshowid: myshow.id, apollo: apollo, kodi: kodi, watching: watching, comments: comments)
+                            myshowsmodel.saveMy()
+                            setOriginals()
                         }
-                        .buttonStyle(myButtonStyle(backgroundColor: .clear))
+                        .buttonStyle(myButtonStyle(backgroundColor: hasChanges ? .red : .clear))
                     }
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
@@ -166,14 +180,23 @@ struct ShowDetailView: View {
     private func refreshShowDetails() {
         Task {
             await loadShows(query: myshow.id)
+            apollo = myshow.Apollo
+            kodi = myshow.Kodi
+            watching = myshow.Watching
+            comments = myshow.comments ?? ""
+            setOriginals()
+            if myshow.episodes.count > 0 {
+                scrollepisodeID = myshow.episodes[0].id
+            }
         }
-        apollo = myshow.Apollo
-        kodi = myshow.Kodi
-        watching = myshow.Watching
-        comments = myshow.comments ?? ""
-        if myshow.episodes.count > 0 {
-            scrollepisodeID = myshow.episodes[0].id
-        }
+    }
+    private func setOriginals() {
+
+        originalApollo = apollo
+        originalKodi = kodi
+        originalWatching = watching
+        originalComments = comments
+
     }
 }
 

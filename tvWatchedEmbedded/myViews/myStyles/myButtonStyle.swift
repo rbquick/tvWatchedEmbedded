@@ -7,16 +7,19 @@
 
 import SwiftUI
 struct myButtonStyle: ButtonStyle {
-    @State var backgroundColor: Color = .clear
+    var backgroundColor: Color
+    init(backgroundColor: Color = .clear) {
+        self.backgroundColor = backgroundColor
+    }
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .frame(width: 100, height: 37)
-            .background(configuration.isPressed ? Color.gray.opacity(0.4) : backgroundColor) // Gray background while pressed
-                        .foregroundColor(configuration.isPressed ? Color.white : Color.black)      // White text when pressed, black otherwise
+            .background(configuration.isPressed ? Color.gray.opacity(0.4) : backgroundColor)
+            .foregroundColor(configuration.isPressed ? Color.white : Color.black)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color.black, lineWidth: 1)
             )
-            .opacity(configuration.isPressed ? 0.7 : 1.0) // Optional pressed effect    }
+            .opacity(configuration.isPressed ? 0.7 : 1.0)
     }
 }
