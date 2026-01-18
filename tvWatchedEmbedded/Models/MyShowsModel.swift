@@ -190,16 +190,13 @@ class MyShowsModel: ObservableObject {
     // code moved into here to support the allshowsbase
     
     func loadTask() {
-        let work = Task {
-                     print("start task work")
-                     try? await loadAllShows()
-                     print("completed task work")
+        _ = Task {
+            print("start task work")
+            await loadAllShows()
+            print("completed task work")
             allBaseShowsComplete = true
-                     // but as the task completes, this reference is released
-                 }
-        
-        
-        
+            // but as the task completes, this reference is released
+        }
         
 //        Task {
 //            await loadAllShows()
@@ -312,6 +309,7 @@ class MyShowsModel: ObservableObject {
 //        myshowsxx.append(showxx)
 //
 //        print(showxx)
+
 
 
 

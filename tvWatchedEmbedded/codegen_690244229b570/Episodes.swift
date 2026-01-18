@@ -1,5 +1,5 @@
-
 import Foundation
+import SwiftUI
 struct Episodes : Identifiable,  Codable {
 
     
@@ -14,7 +14,7 @@ struct Episodes : Identifiable,  Codable {
 	let airstamp : String?
 	let runtime : Int?
 	let rating : Rating?
-	let image : Image?
+	let image : MyImage?
 	let summary : String?
 	let links : _links?
 
@@ -49,11 +49,11 @@ struct Episodes : Identifiable,  Codable {
 		airstamp = try values.decodeIfPresent(String.self, forKey: .airstamp)
 		runtime = try values.decodeIfPresent(Int.self, forKey: .runtime)
 		rating = try values.decodeIfPresent(Rating.self, forKey: .rating)
-		image = try values.decodeIfPresent(Image.self, forKey: .image)
+		image = try values.decodeIfPresent(MyImage.self, forKey: .image)
 		summary = try values.decodeIfPresent(String.self, forKey: .summary)
 		links = try values.decodeIfPresent(_links.self, forKey: .links)
 	}
-    internal init(id: Int? = nil, url: String? = nil, name: String? = nil, season: Int? = nil, number: Int? = nil, type: String? = nil, airdate: String? = nil, airtime: String? = nil, airstamp: String? = nil, runtime: Int? = nil, rating: Rating? = nil, image: Image? = nil, summary: String? = nil, links: _links? = nil) {
+    internal init(id: Int? = nil, url: String? = nil, name: String? = nil, season: Int? = nil, number: Int? = nil, type: String? = nil, airdate: String? = nil, airtime: String? = nil, airstamp: String? = nil, runtime: Int? = nil, rating: Rating? = nil, image: MyImage? = nil, summary: String? = nil, links: _links? = nil) {
         self.id = id
         self.url = url
         self.name = name
@@ -90,3 +90,4 @@ struct Link: Codable {
 //        self.show = show
 //    }
 //}
+

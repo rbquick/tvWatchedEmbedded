@@ -1,5 +1,3 @@
-
-
 import Foundation
 struct ShowBase : Codable, Identifiable {
 	let id : Int?
@@ -21,7 +19,7 @@ struct ShowBase : Codable, Identifiable {
 	let webChannel : WebChannel?
 	let dvdCountry : String?
 	let externals : Externals?
-	let image : Image?
+	let image : MyImage?
 	let summary : String?
 	let updated : Int?
 	let links : _links?
@@ -75,14 +73,14 @@ struct ShowBase : Codable, Identifiable {
 		webChannel = try values.decodeIfPresent(WebChannel.self, forKey: .webChannel)
 		dvdCountry = try values.decodeIfPresent(String.self, forKey: .dvdCountry)
 		externals = try values.decodeIfPresent(Externals.self, forKey: .externals)
-		image = try values.decodeIfPresent(Image.self, forKey: .image)
+		image = try values.decodeIfPresent(MyImage.self, forKey: .image)
 		summary = try values.decodeIfPresent(String.self, forKey: .summary)
 		updated = try values.decodeIfPresent(Int.self, forKey: .updated)
 		links = try values.decodeIfPresent(_links.self, forKey: .links)
 		embedded = try values.decodeIfPresent(_embedded.self, forKey: .embedded)
 	}
     
-    init(id: Int? = nil, url: String? = nil, name: String? = nil, type: String? = nil, language: String? = nil, genres: [String]? = nil, status: String? = nil, runtime: Int? = nil, averageRuntime: Int? = nil, premiered: String? = nil, ended: String? = nil, officialSite: String? = nil, schedule: Schedule? = nil, rating: Rating? = nil, weight: Int? = nil, network: Network? = nil, webChannel: WebChannel? = nil, dvdCountry: String? = nil, externals: Externals? = nil, image: Image? = nil, summary: String? = nil, updated: Int? = nil, links: _links? = nil, embedded: _embedded? = nil) {
+    init(id: Int? = nil, url: String? = nil, name: String? = nil, type: String? = nil, language: String? = nil, genres: [String]? = nil, status: String? = nil, runtime: Int? = nil, averageRuntime: Int? = nil, premiered: String? = nil, ended: String? = nil, officialSite: String? = nil, schedule: Schedule? = nil, rating: Rating? = nil, weight: Int? = nil, network: Network? = nil, webChannel: WebChannel? = nil, dvdCountry: String? = nil, externals: Externals? = nil, image: MyImage? = nil, summary: String? = nil, updated: Int? = nil, links: _links? = nil, embedded: _embedded? = nil) {
             self.id = id
             self.url = url
             self.name = name

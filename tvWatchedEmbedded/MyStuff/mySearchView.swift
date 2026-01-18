@@ -20,29 +20,30 @@ struct mySearchView: View {
             Rectangle()
                 .foregroundColor(Color("SearchBar"))
             HStack {
-//                Image(systemName: "magnifyingglass")
-                    TextField("Search ...", text: $vm.searchText) { startedSearching in
-                        if startedSearching {
-                            withAnimation {
-                                vm.searching = true
-                            }
-                        }
-                    } onCommit: {
+                Image(systemName: "magnifyingglass")
+                TextField("Search ...", text: $vm.searchText) { startedSearching in
+                    if startedSearching {
                         withAnimation {
-
-                            vm.searching = false
+                            vm.searching = true
                         }
-                    }.foregroundColor(.black)
-                        .fontWeight(.bold)
+                    }
+                } onCommit: {
+                    withAnimation {
+                        
+                        vm.searching = false
+                    }
+                }.foregroundColor(.black)
+                    .fontWeight(.bold)
                     .focused($focusedField, equals: .searchText)
-                        .onAppear() {
-                            focusedField = .searchText
-                        }
+                    .onAppear() {
+                        focusedField = .searchText
+                    }
                 Button(action:  {
                     vm.searchText = ""
+                    focusedField = .searchText
                 }) {
-//                    Image(systemName: "x.circle")
-//                        .foregroundColor(.black)
+                    Image(systemName: "x.circle")
+                        .foregroundColor(.black)
                 }
             }
             .foregroundColor(.gray)

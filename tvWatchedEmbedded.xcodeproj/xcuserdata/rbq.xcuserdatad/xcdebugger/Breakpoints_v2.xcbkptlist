@@ -251,8 +251,8 @@
             filePath = "tvWatchedEmbedded/myViews/TvListings/ShowDetailView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "195"
-            endingLineNumber = "195"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
             landmarkName = "setOriginals()"
             landmarkType = "7">
          </BreakpointContent>
@@ -283,8 +283,8 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "239"
-            endingLineNumber = "239"
+            startingLineNumber = "236"
+            endingLineNumber = "236"
             landmarkName = "loadShows(query:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -315,8 +315,8 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "249"
-            endingLineNumber = "249"
+            startingLineNumber = "246"
+            endingLineNumber = "246"
             landmarkName = "showsWithUpcomingEpisodes"
             landmarkType = "24">
          </BreakpointContent>
@@ -331,25 +331,9 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "290"
-            endingLineNumber = "290"
+            startingLineNumber = "287"
+            endingLineNumber = "287"
             landmarkName = "showsWithFutureEpisodesStrict()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "55292B16-ECF4-443B-AEC6-3C73B3BA83E9"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "197"
-            endingLineNumber = "197"
-            landmarkName = "loadTask()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -357,22 +341,6 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "7A92024B-828D-4271-8A83-C8BB4040FE54"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "291"
-            endingLineNumber = "291"
-            landmarkName = "showsWithFutureEpisodesStrict()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "869F1902-7B00-4B65-92C7-27846855256A"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -388,6 +356,22 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "869F1902-7B00-4B65-92C7-27846855256A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "285"
+            endingLineNumber = "285"
+            landmarkName = "showsWithFutureEpisodesStrict()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
             uuid = "3704D369-9A23-40D8-A1DB-6A524D388E57"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -395,8 +379,8 @@
             filePath = "tvWatchedEmbedded/Models/MyShowsModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "240"
-            endingLineNumber = "240"
+            startingLineNumber = "237"
+            endingLineNumber = "237"
             landmarkName = "loadShows(query:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -591,6 +575,22 @@
             endingLineNumber = "17"
             landmarkName = "makeBody(configuration:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A3456BB6-8C09-4AA5-A924-117ABB2054D1"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tvWatchedEmbedded/myViews/TvListings/ShowListView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "filteredShows"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

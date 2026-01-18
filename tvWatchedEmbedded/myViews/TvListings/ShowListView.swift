@@ -51,16 +51,19 @@ struct ShowListView: View {
             case .watching:
                 sourceFiltered = myshowsmodel.MyShows.filter { $0.Watching }
         }
-        if searchText.isEmpty {
+        if myshowsmodel.searchText.isEmpty {
             return sourceFiltered
         } else {
-            return sourceFiltered.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            return sourceFiltered.filter { $0.name.localizedCaseInsensitiveContains(myshowsmodel.searchText) }
         }
     }
 
     var body: some View {
         NavigationSplitView {
             VStack {
+                if !myshowsmodel.searchIsShowing {
+                    mySearchView()
+                }
                 Picker("Source", selection: $selectedSource) {
                     ForEach(ShowSourceFilter.allCases) { filter in
                         Text(filter.rawValue).tag(filter)
@@ -80,7 +83,7 @@ struct ShowListView: View {
                         .onDelete(perform: myshowsmodel.delete)
                     }
                     .navigationTitle("Shows")
-                    .searchable(text: $searchText, prompt: "Filter shows")
+//                    .searchable(text: $searchText, prompt: "Filter shows")
 
                     .toolbar {
                         Button("New Shows") {

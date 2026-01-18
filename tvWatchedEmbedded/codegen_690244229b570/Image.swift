@@ -12,7 +12,7 @@ For support, please feel free to contact me at https://www.linkedin.com/in/syeda
 */
 
 import Foundation
-struct Image : Codable {
+struct MyImage : Codable {
 
     
 	let medium : String?
@@ -34,3 +34,4 @@ struct Image : Codable {
         self.original = original
     }
 }
+

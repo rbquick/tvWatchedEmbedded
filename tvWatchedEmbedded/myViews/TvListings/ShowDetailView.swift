@@ -185,6 +185,7 @@ struct ShowDetailView: View {
             watching = myshow.Watching
             comments = myshow.comments ?? ""
             setOriginals()
+            dismissKeyboard()
             if myshow.episodes.count > 0 {
                 scrollepisodeID = myshow.episodes[0].id
             }
